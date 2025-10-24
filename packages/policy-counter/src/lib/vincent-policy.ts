@@ -21,7 +21,7 @@ declare const Lit: typeof LitNamespace;
 declare const ethers: EthersType;
 
 export const vincentPolicy = createVincentPolicy({
-  packageName: '@lit-protocol/vincent-example-policy-counter' as const,
+  packageName: '@vaultlayer/vincent-send-policy-counter' as const,
 
   abilityParamsSchema,
   userParamsSchema,
@@ -40,15 +40,12 @@ export const vincentPolicy = createVincentPolicy({
     { abilityParams, userParams },
     { allow, deny, appId, delegation: { delegatorPkpInfo } },
   ) => {
-    console.log(
-      '[@lit-protocol/vincent-example-policy-counter/precheck] 🔍 Policy precheck params:',
-      {
-        abilityParams,
-        userParams,
-        ethAddress: delegatorPkpInfo.ethAddress,
-        appId,
-      },
-    );
+    console.log('[@vaultlayer/vincent-send-policy-counter/precheck] 🔍 Policy precheck params:', {
+      abilityParams,
+      userParams,
+      ethAddress: delegatorPkpInfo.ethAddress,
+      appId,
+    });
 
     // Only use what we actually need - no defaults in policy logic
     const { maxSends, timeWindowSeconds } = userParams;
@@ -67,22 +64,19 @@ export const vincentPolicy = createVincentPolicy({
       };
 
       console.log(
-        '[@lit-protocol/vincent-example-policy-counter/precheck] 🚫 POLICY PRECHECK DENYING REQUEST:',
+        '[@vaultlayer/vincent-send-policy-counter/precheck] 🚫 POLICY PRECHECK DENYING REQUEST:',
       );
       console.log(
-        '[@lit-protocol/vincent-example-policy-counter/precheck] 🚫 Deny result:',
+        '[@vaultlayer/vincent-send-policy-counter/precheck] 🚫 Deny result:',
         JSON.stringify(denyResult, null, 2),
       );
       console.log(
-        '[@lit-protocol/vincent-example-policy-counter/precheck] 🚫 Current count:',
+        '[@vaultlayer/vincent-send-policy-counter/precheck] 🚫 Current count:',
         limitCheck.currentCount,
       );
+      console.log('[@vaultlayer/vincent-send-policy-counter/precheck] 🚫 Max sends:', maxSends);
       console.log(
-        '[@lit-protocol/vincent-example-policy-counter/precheck] 🚫 Max sends:',
-        maxSends,
-      );
-      console.log(
-        '[@lit-protocol/vincent-example-policy-counter/precheck] 🚫 Limit check result:',
+        '[@vaultlayer/vincent-send-policy-counter/precheck] 🚫 Limit check result:',
         JSON.stringify(limitCheck, null, 2),
       );
 
@@ -112,13 +106,10 @@ export const vincentPolicy = createVincentPolicy({
     { abilityParams, userParams },
     { allow, deny, delegation: { delegatorPkpInfo } },
   ) => {
-    console.log(
-      '[@lit-protocol/vincent-example-policy-counter/evaluate] Evaluating send limit policy',
-      {
-        abilityParams,
-        userParams,
-      },
-    );
+    console.log('[@vaultlayer/vincent-send-policy-counter/evaluate] Evaluating send limit policy', {
+      abilityParams,
+      userParams,
+    });
 
     const { maxSends, timeWindowSeconds } = userParams;
     const { ethAddress } = delegatorPkpInfo;
@@ -165,14 +156,11 @@ export const vincentPolicy = createVincentPolicy({
       });
     }
 
-    console.log(
-      '[@lit-protocol/vincent-example-policy-counter/evaluate] Evaluated send limit policy',
-      {
-        currentCount,
-        maxSends,
-        remainingSends,
-      },
-    );
+    console.log('[@vaultlayer/vincent-send-policy-counter/evaluate] Evaluated send limit policy', {
+      currentCount,
+      maxSends,
+      remainingSends,
+    });
 
     return allow({
       currentCount,
@@ -188,22 +176,20 @@ export const vincentPolicy = createVincentPolicy({
   ) => {
     const { ethAddress } = delegatorPkpInfo;
 
-    console.log(
-      '[@lit-protocol/vincent-example-policy-counter/commit] 🚀 Committing counter update.',
-    );
+    console.log('[@vaultlayer/vincent-send-policy-counter/commit] 🚀 Committing counter update.');
 
     // Check if we need to reset the counter first
     const checkResponse = await checkSendLimit(ethAddress, maxSends, timeWindowSeconds);
 
     if (checkResponse.shouldReset) {
       console.log(
-        `[@lit-protocol/vincent-example-policy-counter/commit] Resetting counter for ${ethAddress} due to time window expiration`,
+        `[@vaultlayer/vincent-send-policy-counter/commit] Resetting counter for ${ethAddress} due to time window expiration`,
       );
       await resetSendCounter(ethAddress, delegatorPkpInfo.publicKey);
     }
 
     console.log(
-      `[@lit-protocol/vincent-example-policy-counter/commit] Recording send to contract for ${ethAddress} (appId: ${appId})`,
+      `[@vaultlayer/vincent-send-policy-counter/commit] Recording send to contract for ${ethAddress} (appId: ${appId})`,
     );
 
     // Call contract directly without Lit.Actions.runOnce wrapper
@@ -222,7 +208,7 @@ export const vincentPolicy = createVincentPolicy({
     const newCount = currentCount + 1;
     const remainingSends = maxSends - newCount;
 
-    console.log('[@lit-protocol/vincent-example-policy-counter/commit] Policy commit successful', {
+    console.log('[@vaultlayer/vincent-send-policy-counter/commit] Policy commit successful', {
       ethAddress,
       newCount,
       maxSends,

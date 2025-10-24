@@ -1,5 +1,5 @@
 module.exports = {
-  displayName: '@lit-protocol/vincent-example-ability-native-send',
+  displayName: '@vaultlayer/vincent-ability-native-send',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
   testMatch: ['<rootDir>/src/**/*.spec.ts', '<rootDir>/src/**/*.test.ts'],

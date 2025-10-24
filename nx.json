@@ -49,7 +49,15 @@
     "libsDir": "packages"
   },
   "release": {
-    "projects": ["ability-native-send", "policy-counter", "test-e2e"],
+    "projects": [
+      "ability-native-send",
+      "policy-counter",
+      "test-e2e",
+      "policy-btc-outputs",
+      "ability-btc-psbt-signer",
+      "ability-call-contract",
+      "policy-call-contract-whitelist"
+    ],
     "projectsRelationship": "independent",
     "releaseTagPattern": "vincent/{projectName}/{version}",
     "versionPlans": true,

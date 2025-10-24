@@ -1,9 +1,10 @@
+import { bundledVincentPolicy } from '@vaultlayer/vincent-send-policy-counter';
+
 import {
   createVincentAbility,
   createVincentAbilityPolicy,
   supportedPoliciesForAbility,
 } from '@lit-protocol/vincent-ability-sdk';
-import { bundledVincentPolicy } from '@lit-protocol/vincent-example-policy-counter';
 import { laUtils } from '@lit-protocol/vincent-scaffold-sdk';
 
 import type { EthersType /*LitNamespace*/ } from '../Lit';
@@ -31,7 +32,7 @@ const SendLimitPolicy = createVincentAbilityPolicy({
 });
 
 export const vincentAbility = createVincentAbility({
-  packageName: '@lit-protocol/vincent-example-ability-native-send' as const,
+  packageName: '@vaultlayer/vincent-ability-native-send' as const,
   abilityParamsSchema: abilityParamsSchema,
   abilityDescription: 'Send native ETH to a recipient',
   supportedPolicies: supportedPoliciesForAbility([SendLimitPolicy]),
@@ -63,23 +64,17 @@ export const vincentAbility = createVincentAbility({
     try {
       const { to, amount, rpcUrl } = abilityParams;
 
-      console.log(
-        '[@lit-protocol/vincent-example-ability-native-send/execute] Executing Native Send Tool',
-        {
-          to,
-          amount,
-          rpcUrl,
-        },
-      );
+      console.log('[@vaultlayer/vincent-ability-native-send/execute] Executing Native Send Tool', {
+        to,
+        amount,
+        rpcUrl,
+      });
 
       // Get provider - use provided RPC URL or default to Yellowstone
       const finalRpcUrl = rpcUrl || 'https://yellowstone-rpc.litprotocol.com/';
       const provider = new ethers.providers.JsonRpcProvider(finalRpcUrl);
 
-      console.log(
-        '[@lit-protocol/vincent-example-ability-native-send/execute] Using RPC URL:',
-        finalRpcUrl,
-      );
+      console.log('[@vaultlayer/vincent-ability-native-send/execute] Using RPC URL:', finalRpcUrl);
 
       // Get PKP's public key from the delegation context to use while composing a signed tx
       const pkpPublicKey = delegation.delegatorPkpInfo.publicKey;
@@ -92,32 +87,29 @@ export const vincentAbility = createVincentAbility({
         to,
       });
 
-      console.log(
-        '[@lit-protocol/vincent-example-ability-native-send/execute] Native send successful',
-        {
-          txHash,
-          to,
-          amount,
-        },
-      );
+      console.log('[@vaultlayer/vincent-ability-native-send/execute] Native send successful', {
+        txHash,
+        to,
+        amount,
+      });
 
       // We will first track the send limit entry before submitting the tx to be extra safe about double-spending
       // If committing to the count policy fails, we don't want to submit the tx at all, so doing it first is important
       console.log(
-        '[@lit-protocol/vincent-example-ability-native-send/execute] Manually calling policy commit function...',
+        '[@vaultlayer/vincent-ability-native-send/execute] Manually calling policy commit function...',
       );
 
       // This is a type-safe reference based on `supportedPolicies` in the ability definition
       const sendLimitPolicyContext =
-        policiesContext.allowedPolicies['@lit-protocol/vincent-example-policy-counter'];
+        policiesContext.allowedPolicies['@vaultlayer/vincent-send-policy-counter'];
 
       if (sendLimitPolicyContext) {
         console.log(
-          `[@lit-protocol/vincent-example-ability-native-send/execute] ✅ Found send limit policy context. The policy was enabled for ${delegation.delegatorPkpInfo.ethAddress}`,
+          `[@vaultlayer/vincent-ability-native-send/execute] ✅ Found send limit policy context. The policy was enabled for ${delegation.delegatorPkpInfo.ethAddress}`,
         );
 
         console.log(
-          '[@lit-protocol/vincent-example-ability-native-send/execute] ✅ Policy evaluation result:',
+          '[@vaultlayer/vincent-ability-native-send/execute] ✅ Policy evaluation result:',
           sendLimitPolicyContext.result,
         );
 
@@ -133,24 +125,24 @@ export const vincentAbility = createVincentAbility({
         };
 
         console.log(
-          '[@lit-protocol/vincent-example-ability-native-send/execute] ✅ Available in sendLimitPolicyContext:',
+          '[@vaultlayer/vincent-ability-native-send/execute] ✅ Available in sendLimitPolicyContext:',
           Object.keys(sendLimitPolicyContext),
         );
         console.log(
-          '[@lit-protocol/vincent-example-ability-native-send/execute] ✅ Calling commit with explicit parameters (ignoring TS signature)...',
+          '[@vaultlayer/vincent-ability-native-send/execute] ✅ Calling commit with explicit parameters (ignoring TS signature)...',
         );
 
         const commitResult = await sendLimitPolicyContext.commit(commitParams);
         console.log(
-          '[@lit-protocol/vincent-example-ability-native-send/execute] ✅ Policy commit result:',
+          '[@vaultlayer/vincent-ability-native-send/execute] ✅ Policy commit result:',
           commitResult,
         );
       } else {
         console.log(
-          '[@lit-protocol/vincent-example-ability-native-send/execute] ❌ Send limit policy context not found in policiesContext.allowedPolicies',
+          '[@vaultlayer/vincent-ability-native-send/execute] ❌ Send limit policy context not found in policiesContext.allowedPolicies',
         );
         console.log(
-          '[@lit-protocol/vincent-example-ability-native-send/execute] ❌ Available policies:',
+          '[@vaultlayer/vincent-ability-native-send/execute] ❌ Available policies:',
           Object.keys(policiesContext.allowedPolicies || {}),
         );
       }
@@ -162,10 +154,7 @@ export const vincentAbility = createVincentAbility({
         timestamp: Date.now(),
       });
     } catch (error) {
-      console.error(
-        '[@lit-protocol/vincent-example-ability-native-send/execute] Native send failed',
-        error,
-      );
+      console.error('[@vaultlayer/vincent-ability-native-send/execute] Native send failed', error);
 
       return fail({
         error: error instanceof Error ? error.message : 'Unknown error occurred',

@@ -2,9 +2,15 @@
 
 A complete example repository for Vincent Ability and Policy authors. This monorepo uses Nx and pnpm and includes:
 
-- An example Vincent Ability that sends native tokens
-- An example Vincent Policy that counts ability executions
-- End-to-end tests that automatically build, deploy, and exercise the example ability and policy
+- **Example Abilities:**
+  - An example Vincent Ability that sends native tokens
+  - A Bitcoin PSBT signer ability for signing Bitcoin transactions
+  - A generic call contract ability for EVM smart contract interactions
+- **Example Policies:**
+  - An example Vincent Policy that counts ability executions
+  - A Bitcoin output whitelist policy for validating Bitcoin transaction outputs
+  - A call contract whitelist policy for controlling smart contract interactions
+- **End-to-end tests** that automatically build, deploy, and exercise the example abilities and policies
 
 ### See detailed documentation / guides at [docs.heyvincent.ai](https://docs.heyvincent.ai)
 
@@ -56,20 +62,115 @@ Root-level scripts you will commonly use:
 
 Project-level Nx targets you may find useful (run via pnpm nx ...):
 
-| Target        | Project(s)                          | What it does                                                           |
-| ------------- | ----------------------------------- | ---------------------------------------------------------------------- |
-| action:build  | ability-native-send, policy-counter | Bundles the Lit Action code for the Ability/Policy                     |
-| action:deploy | ability-native-send, policy-counter | Builds (if needed) and deploys the Lit Action code                     |
-| build         | all                                 | TypeScript build (depends on action:build where applicable)            |
-| test-e2e      | test-e2e                            | Depends on deploying both the example Ability & Policy, then runs Jest |
+| Target        | Project(s)                                                                                                                              | What it does                                                  |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| action:build  | ability-native-send, ability-btc-psbt-signer, ability-call-contract, policy-counter, policy-btc-outputs, policy-call-contract-whitelist | Bundles the Lit Action code for the Ability/Policy            |
+| action:deploy | ability-native-send, ability-btc-psbt-signer, ability-call-contract, policy-counter, policy-btc-outputs, policy-call-contract-whitelist | Builds (if needed) and deploys the Lit Action code            |
+| build         | all                                                                                                                                     | TypeScript build (depends on action:build where applicable)   |
+| test-e2e      | test-e2e                                                                                                                                | Depends on deploying the Abilities & Policies, then runs Jest |
 
 ## Packages in this repository
 
-| Package                                           | Path                         | Purpose                                                                                                                                              |
-| ------------------------------------------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| @lit-protocol/vincent-example-ability-native-send | packages/ability-native-send | An example Vincent Ability that sends native tokens to a user. Demonstrates Ability authoring, bundling, and deployment.                             |
-| @lit-protocol/vincent-example-policy-counter      | packages/policy-counter      | An example Vincent Policy that counts the number of times an Ability is executed. Demonstrates Policy authoring, bundling, and deployment.           |
-| @lit-protocol/vincent-example-e2e                 | packages/test-e2e            | Private package with end-to-end tests. It orchestrates building and deploying the example Ability & Policy and then runs integration tests via Jest. |
+### Abilities
+
+| Package                                     | Path                             | Purpose                                                                                                                                                        |
+| ------------------------------------------- | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| @vaultlayer/vincent-ability-native-send     | packages/ability-native-send     | An example Vincent Ability that sends native tokens to a user. Demonstrates Ability authoring, bundling, and deployment.                                       |
+| @vaultlayer/vincent-ability-btc-psbt-signer | packages/ability-btc-psbt-signer | Signs Bitcoin PSBTs using PKP-derived Bitcoin keys. Supports testnet/mainnet, CLTV timelocks, and transaction broadcasting. Works with btc-outputs policy.     |
+| @vaultlayer/vincent-ability-call-contract   | packages/ability-call-contract   | Generic smart contract interaction ability for EVM chains. Supports flexible parameter encoding, optional gas sponsorship (EIP-7702), and call data appending. |
+
+### Policies
+
+| Package                                            | Path                                    | Purpose                                                                                                                                                           |
+| -------------------------------------------------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| @vaultlayer/vincent-send-policy-counter            | packages/policy-counter                 | An example Vincent Policy that counts the number of times an Ability is executed. Demonstrates Policy authoring, bundling, and deployment.                        |
+| @vaultlayer/vincent-policy-btc-outputs             | packages/policy-btc-outputs             | Validates Bitcoin transaction outputs against a whitelist of allowed addresses. Automatically includes PKP's derived Bitcoin address. Works with btc-psbt-signer. |
+| @vaultlayer/vincent-policy-call-contract-whitelist | packages/policy-call-contract-whitelist | Provides granular access control for smart contract interactions. Enforces whitelists for contracts, functions, chains, value limits, and call data prefixes.     |
+
+### Testing
+
+| Package                           | Path              | Purpose                                                                                                                                                  |
+| --------------------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| @lit-protocol/vincent-example-e2e | packages/test-e2e | Private package with end-to-end tests. It orchestrates building and deploying the example Abilities & Policies and then runs integration tests via Jest. |
+
+## Package Details
+
+### Bitcoin PSBT Signer Ability
+
+The Bitcoin PSBT Signer (`@vaultlayer/vincent-ability-btc-psbt-signer`) enables Vincent Apps to sign Bitcoin transactions through PSBTs (Partially Signed Bitcoin Transactions).
+
+**Key Features:**
+
+- Derives Bitcoin keys from PKP's public key (no wrapped keys needed)
+- Supports both testnet and mainnet Bitcoin networks
+- Handles CLTV (CheckLockTimeVerify) timelock scripts for staked Bitcoin
+- Broadcasts signed transactions to Bitcoin network
+- Integrates with Bitcoin Output Whitelist policy
+
+**Use Cases:**
+
+- Bitcoin wallet applications
+- Staked Bitcoin management with timelock support
+- Bitcoin payment systems
+- Cross-chain Bitcoin bridges
+
+See the [full documentation](packages/ability-btc-psbt-signer/README.md) for detailed usage examples.
+
+### Call Contract Ability
+
+The Call Contract Ability (`@vaultlayer/vincent-ability-call-contract`) provides a generic interface for interacting with any EVM smart contract.
+
+**Key Features:**
+
+- Call any smart contract function with flexible parameters
+- Support for complex tuples via base64 encoding
+- Optional EIP-7702 gas sponsorship via Alchemy
+- Multi-chain support (Ethereum, Base, Polygon, etc.)
+- Call data appending for tracking or bridge integrations
+- Integrates with Call Contract Whitelist policy
+
+**Use Cases:**
+
+- DeFi operations (lending, DEXs, yield farms)
+- Token management (ERC20, ERC721, ERC1155)
+- Bridge integrations with call data tracking
+- DAO governance and voting
+- Multi-step contract workflows
+
+See the [full documentation](packages/ability-call-contract/README.md) for detailed usage examples.
+
+### Bitcoin Output Whitelist Policy
+
+The Bitcoin Output Whitelist Policy (`@vaultlayer/vincent-policy-btc-outputs`) validates that Bitcoin transaction outputs only go to approved addresses.
+
+**Key Features:**
+
+- Validates all PSBT output addresses against whitelist
+- Automatically allows PKP's derived Bitcoin address
+- Supports both testnet and mainnet networks
+- Works seamlessly with Bitcoin PSBT Signer ability
+
+### Call Contract Whitelist Policy
+
+The Call Contract Whitelist Policy (`@vaultlayer/vincent-policy-call-contract-whitelist`) provides granular access control for smart contract interactions.
+
+**Key Features:**
+
+- Contract address whitelisting
+- Function name whitelisting
+- Multi-chain control
+- Transaction value limits
+- Call data prefix validation
+
+**Configuration Options:**
+
+- `vlCallContractMaxValue`: Maximum ETH value in wei
+- `vlCallContractAllowedContracts`: Array of allowed contract addresses
+- `vlCallContractAllowedFunctions`: Array of allowed function names
+- `vlCallContractAllowedChains`: Array of allowed blockchain networks
+- `vlCallContractAllowedCallDataPrefixes`: Optional hex prefixes for appended data
+
+See the [full documentation](packages/policy-call-contract-whitelist/README.md) for detailed configuration examples.
 
 ## Bootstrap flow
 

@@ -1,0 +1,88 @@
+{
+  "jsonSchema": {
+    "type": "object",
+    "properties": {
+      "vlCallContractMaxValue": {
+        "type": "string",
+        "title": "Maximum ETH Value",
+        "description": "Maximum ETH value (in wei) allowed to be sent with the transaction. Use '0' to disallow sending ETH."
+      },
+      "vlCallContractAllowedContracts": {
+        "type": "array",
+        "title": "Allowed Contracts",
+        "description": "Array of allowed contract addresses. Leave empty to allow all contracts.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "vlCallContractAllowedFunctions": {
+        "type": "array",
+        "title": "Allowed Functions",
+        "description": "Array of allowed function names. Leave empty to allow all functions.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "vlCallContractAllowedChains": {
+        "type": "array",
+        "title": "Allowed Chains",
+        "description": "Array of allowed chain names (e.g., 'ethereum', 'polygon'). Leave empty to allow all chains.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "vlCallContractAllowedCallDataPrefixes": {
+        "type": "array",
+        "title": "Allowed Call Data Prefixes (Optional)",
+        "description": "Optional array of allowed hex prefixes for appendToCallData. If defined, any appendToCallData must start with one of these prefixes.",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "required": [
+      "vlCallContractMaxValue",
+      "vlCallContractAllowedContracts",
+      "vlCallContractAllowedFunctions",
+      "vlCallContractAllowedChains"
+    ]
+  },
+  "uiSchema": {
+    "vlCallContractMaxValue": {
+      "ui:widget": "text",
+      "ui:placeholder": "1000000000000000000"
+    },
+    "vlCallContractAllowedContracts": {
+      "ui:options": {
+        "orderable": false
+      },
+      "items": {
+        "ui:placeholder": "0x1234567890abcdef1234567890abcdef12345678"
+      }
+    },
+    "vlCallContractAllowedFunctions": {
+      "ui:options": {
+        "orderable": false
+      },
+      "items": {
+        "ui:placeholder": "transfer"
+      }
+    },
+    "vlCallContractAllowedChains": {
+      "ui:options": {
+        "orderable": false
+      },
+      "items": {
+        "ui:placeholder": "ethereum"
+      }
+    },
+    "vlCallContractAllowedCallDataPrefixes": {
+      "ui:options": {
+        "orderable": false
+      },
+      "items": {
+        "ui:placeholder": "0xabcd"
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 module.exports = {
-  displayName: '@lit-protocol/vincent-example-policy-counter',
+  displayName: '@vaultlayer/vincent-send-policy-counter',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
   testMatch: ['<rootDir>/src/**/*.spec.ts', '<rootDir>/src/**/*.test.ts'],

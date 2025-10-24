@@ -1,3 +1,5 @@
+import { bundledVincentAbility as nativeSendAbility } from '@vaultlayer/vincent-ability-native-send';
+import { bundledVincentPolicy as counterPolicy } from '@vaultlayer/vincent-send-policy-counter';
 // eslint-disable-next-line import-x/no-named-as-default
 import Table from 'cli-table3';
 import { ethers } from 'ethers';
@@ -8,8 +10,6 @@ import {
   disconnectVincentAbilityClients,
   getVincentAbilityClient,
 } from '@lit-protocol/vincent-app-sdk/abilityClient';
-import { bundledVincentAbility as nativeSendAbility } from '@lit-protocol/vincent-example-ability-native-send';
-import { bundledVincentPolicy as counterPolicy } from '@lit-protocol/vincent-example-policy-counter';
 
 import {
   getChainHelpers,
@@ -167,7 +167,7 @@ describe('Run e2e test', () => {
     if (policyFailResult.success === false && policyFailResult.context) {
       expect(policyFailResult.context.policiesContext.deniedPolicy).toHaveProperty(
         'packageName',
-        '@lit-protocol/vincent-example-policy-counter',
+        '@vaultlayer/vincent-send-policy-counter',
       );
     }
     expect(policyFailResult).toHaveProperty('success', false);
