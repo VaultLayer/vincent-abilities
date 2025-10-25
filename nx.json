@@ -56,7 +56,9 @@
       "policy-btc-outputs",
       "ability-btc-psbt-signer",
       "ability-call-contract",
-      "policy-call-contract-whitelist"
+      "policy-call-contract-whitelist",
+      "ability-app-metadata",
+      "policy-app-metadata"
     ],
     "projectsRelationship": "independent",
     "releaseTagPattern": "vincent/{projectName}/{version}",

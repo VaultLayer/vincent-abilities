@@ -95,6 +95,37 @@ Project-level Nx targets you may find useful (run via pnpm nx ...):
 
 ## Package Details
 
+### Native Send Ability
+
+The Native Send Ability (`@vaultlayer/vincent-ability-native-send`) enables Vincent Apps to send native ETH tokens to any Ethereum address.
+
+**Key Features:**
+
+- Sends native ETH tokens to any valid Ethereum address
+- Validates sufficient balance before execution
+- Supports custom RPC URLs (defaults to Yellowstone testnet)
+- Integrates with Send Limit Counter policy for usage tracking
+- Uses PKP-derived keys for transaction signing
+
+**Parameters:**
+
+- `to`: Ethereum address to send tokens to (required)
+- `amount`: Amount of ETH to send as a string (required)
+- `rpcUrl`: RPC URL for the blockchain network (optional, defaults to Yellowstone)
+
+**Use Cases:**
+
+- Simple ETH transfers between addresses
+- Payment systems and remittances
+- DeFi protocol interactions requiring ETH
+- Multi-signature wallet operations
+- Automated payment workflows
+
+**Policy Integration:**
+Works with the `@vaultlayer/vincent-send-policy-counter` policy to track and limit the number of sends per time window.
+
+See the [full documentation](packages/ability-native-send/README.md) for detailed usage examples.
+
 ### Bitcoin PSBT Signer Ability
 
 The Bitcoin PSBT Signer (`@vaultlayer/vincent-ability-btc-psbt-signer`) enables Vincent Apps to sign Bitcoin transactions through PSBTs (Partially Signed Bitcoin Transactions).
@@ -171,6 +202,46 @@ The Call Contract Whitelist Policy (`@vaultlayer/vincent-policy-call-contract-wh
 - `vlCallContractAllowedCallDataPrefixes`: Optional hex prefixes for appended data
 
 See the [full documentation](packages/policy-call-contract-whitelist/README.md) for detailed configuration examples.
+
+### Send Policy Counter
+
+The Send Policy Counter (`@vaultlayer/vincent-send-policy-counter`) tracks and limits the number of native token sends per time window using an on-chain counter contract.
+
+**Key Features:**
+
+- Tracks the number of sends executed by a PKP using a smart contract
+- Enforces maximum send limits within configurable time windows
+- Prevents double-spending by committing counts before transaction execution
+- Automatically resets counters when time windows expire
+- Integrates seamlessly with Native Send ability
+- Uses on-chain storage for reliable state management
+
+**User Parameters:**
+
+- `maxSends`: Maximum number of sends allowed within the time window (positive integer)
+- `timeWindowSeconds`: Duration of the counting window in seconds (positive integer)
+
+**Policy Phases:**
+
+1. **Precheck**: Validates if the PKP has remaining sends in the current window
+2. **Evaluate**: Double-checks the send limit before execution
+3. **Commit**: Records the send on-chain and updates the counter
+
+**Response Data:**
+
+- `currentCount`: Number of sends already made in the current window
+- `remainingSends`: Number of sends still allowed before hitting the limit
+- `secondsUntilReset`: Time remaining until the counter resets (when denied)
+
+**Use Cases:**
+
+- Rate limiting for payment applications
+- Preventing abuse in automated systems
+- Implementing daily/monthly spending limits
+- Security controls for high-value transactions
+- API rate limiting for blockchain operations
+
+See the [full documentation](packages/policy-counter/README.md) for detailed configuration examples.
 
 ## Bootstrap flow
 

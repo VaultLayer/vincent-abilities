@@ -1,8 +1,8 @@
-# Vincent Ability: Call Contract
+# Vincent Ability: EVM Call Contract
 
 ## Overview
 
-The Call Contract Ability enables Vincent Apps to call any smart contract function with flexible parameter encoding and optional gas sponsorship. This ability provides a generic interface for interacting with blockchain smart contracts while maintaining security through policy enforcement.
+The EVM Call Contract Ability enables Vincent Apps to call any smart contract function with flexible parameter encoding and optional gas sponsorship. This ability provides a generic interface for interacting with blockchain smart contracts while maintaining security through policy enforcement.
 
 ## Key Features
 

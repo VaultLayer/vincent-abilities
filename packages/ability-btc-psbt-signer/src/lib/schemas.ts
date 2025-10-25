@@ -8,6 +8,10 @@ export const abilityParamsSchema = z.object({
     .optional()
     .default(false)
     .describe('Whether this is a redeem transaction for staked Bitcoin (CLTV timelock)'),
+  stakingLockTime: z
+    .number()
+    .optional()
+    .describe('The lockTime for staking transactions (Unix timestamp)'),
 });
 
 export const precheckSuccessSchema = z.object({

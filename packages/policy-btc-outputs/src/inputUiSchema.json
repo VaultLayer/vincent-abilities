@@ -1,0 +1,26 @@
+{
+  "jsonSchema": {
+    "type": "object",
+    "properties": {
+      "allowedOutputs": {
+        "type": "array",
+        "title": "Allowed Bitcoin Output Addresses",
+        "description": "Array of allowed Bitcoin output addresses. Leave empty to only allow outputs to the PKP's derived Bitcoin address.",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "required": ["allowedOutputs"]
+  },
+  "uiSchema": {
+    "allowedOutputs": {
+      "ui:options": {
+        "orderable": false
+      },
+      "items": {
+        "ui:placeholder": "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh"
+      }
+    }
+  }
+}

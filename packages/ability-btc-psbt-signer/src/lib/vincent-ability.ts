@@ -37,6 +37,7 @@ const BtcOutputsPolicy = createVincentAbilityPolicy({
   abilityParameterMappings: {
     psbtBase64: 'psbtBase64',
     btcNetwork: 'btcNetwork',
+    stakingLockTime: 'stakingLockTime',
   },
 });
 

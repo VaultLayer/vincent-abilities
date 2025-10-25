@@ -14,7 +14,7 @@
     "esModuleInterop": true,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts", "src/generated/vincent-policy-metadata.json"],
+  "include": ["src/**/*.ts", "src/**/*.json"],
   "references": [
     {
       "path": "../../libs/ability-sdk/tsconfig.lib.json"

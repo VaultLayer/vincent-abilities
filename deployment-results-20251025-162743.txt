@@ -1,0 +1,1258 @@
+Deployment Results - Sat Oct 25 04:27:43 PM -05 2025
+======================================
+
+ability-btc-psbt-signer:
+  IPFS CID: [0;34mDeploying ability-btc-psbt-signer to IPFS...[0m
+ WARN  Unsupported engine: wanted: {"node":"^20.19.4"} (current: {"node":"v23.11.0","pnpm":"10.7.0"})
+
+ NX   Running target action:deploy for project ability-btc-psbt-signer and 3 tasks it depends on:
+
+
+
+> nx run policy-btc-outputs:"action:build"
+
+> pnpm node ./esbuild.config.js
+
+./src/lib
+(node:765207) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+▲ [WARNING] Cannot find base config file "../../../tsconfig.base.json" [tsconfig.json]
+
+    tsconfig.json:2:13:
+      2 │   "extends": "../../../tsconfig.base.json",
+        ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✅ lit-action.js
+- 2.5881 MB (in decimal)
+- 2.4682 MB (in binary)
+✅ Lit actions built successfully
+
+> nx run policy-btc-outputs:build
+
+Compiling TypeScript files for project "policy-btc-outputs"...
+Done compiling TypeScript files for project "policy-btc-outputs".
+
+[2mdist/README.md[22m
+
+[2m../../dist/src/generated/lit-action.js[22m
+
+[2m../../dist/src/generated/vincent-bundled-policy.ts[22m
+
+[2m../../dist/src/generated/vincent-policy-metadata.json[22m
+
+> nx run ability-btc-psbt-signer:"action:build"
+
+> pnpm node ./esbuild.config.js
+
+./src/lib
+(node:766279) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+▲ [WARNING] Cannot find base config file "../../../tsconfig.base.json" [tsconfig.json]
+
+    tsconfig.json:2:13:
+      2 │   "extends": "../../../tsconfig.base.json",
+        ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✅ lit-action.js
+- 2.5927 MB (in decimal)
+- 2.4726 MB (in binary)
+✅ Vincent ability built successfully
+
+> nx run ability-btc-psbt-signer:"action:deploy"
+
+> node scripts/deploy-lit-action.js
+
+Deploying lit-action.js to IPFS...
+✅ Successfully deployed Lit Action
+ℹ️  Deployed lit-action.js to IPFS: QmNUSZnXGPX3vLCTjZutG83RnGuwfvujeRTikkWyxGzkie
+
+
+
+ NX   Successfully ran target action:deploy for project ability-btc-psbt-signer and 3 tasks it depends on
+QmNUSZnXGPX3vLCTjZutG83RnGuwfvujeRTikkWyxGzkie
+  npm version: [0;34mPublishing ability-btc-psbt-signer to npm...[0m
+npm notice
+npm notice 📦  @vaultlayer/vincent-ability-btc-psbt-signer@0.1.5
+npm notice Tarball Contents
+npm notice 3.8kB README.md
+npm notice 869B dist/package.json
+npm notice 3.8kB dist/README.md
+npm notice 2.7MB dist/src/generated/lit-action.js
+npm notice 66B dist/src/generated/vincent-ability-metadata.json
+npm notice 34.9kB dist/src/generated/vincent-bundled-ability.d.ts
+npm notice 953B dist/src/generated/vincent-bundled-ability.d.ts.map
+npm notice 848B dist/src/generated/vincent-bundled-ability.js
+npm notice 442B dist/src/generated/vincent-bundled-ability.ts
+npm notice 112B dist/src/index.d.ts
+npm notice 150B dist/src/index.d.ts.map
+npm notice 354B dist/src/index.js
+npm notice 520B dist/src/lib/bitcoin-helpers/broadcast-btc-tx.d.ts
+npm notice 274B dist/src/lib/bitcoin-helpers/broadcast-btc-tx.d.ts.map
+npm notice 2.2kB dist/src/lib/bitcoin-helpers/broadcast-btc-tx.js
+npm notice 427B dist/src/lib/bitcoin-helpers/get-btc-pubkey.d.ts
+npm notice 218B dist/src/lib/bitcoin-helpers/get-btc-pubkey.d.ts.map
+npm notice 1.2kB dist/src/lib/bitcoin-helpers/get-btc-pubkey.js
+npm notice 317B dist/src/lib/bitcoin-helpers/get-btc-signature.d.ts
+npm notice 253B dist/src/lib/bitcoin-helpers/get-btc-signature.d.ts.map
+npm notice 1.4kB dist/src/lib/bitcoin-helpers/get-btc-signature.js
+npm notice 175B dist/src/lib/bitcoin-helpers/index.d.ts
+npm notice 223B dist/src/lib/bitcoin-helpers/index.d.ts.map
+npm notice 969B dist/src/lib/bitcoin-helpers/index.js
+npm notice 1.5kB dist/src/lib/bitcoin-helpers/redeem-script.d.ts
+npm notice 1.2kB dist/src/lib/bitcoin-helpers/redeem-script.d.ts.map
+npm notice 9.3kB dist/src/lib/bitcoin-helpers/redeem-script.js
+npm notice 51B dist/src/lib/lit-action.d.ts
+npm notice 124B dist/src/lib/lit-action.d.ts.map
+npm notice 503B dist/src/lib/lit-action.js
+npm notice 1.8kB dist/src/lib/schemas.d.ts
+npm notice 375B dist/src/lib/schemas.d.ts.map
+npm notice 2.0kB dist/src/lib/schemas.js
+npm notice 34.8kB dist/src/lib/vincent-ability.d.ts
+npm notice 920B dist/src/lib/vincent-ability.d.ts.map
+npm notice 8.4kB dist/src/lib/vincent-ability.js
+npm notice 841B package.json
+npm notice Tarball Details
+npm notice name: @vaultlayer/vincent-ability-btc-psbt-signer
+npm notice version: 0.1.5
+npm notice filename: vaultlayer-vincent-ability-btc-psbt-signer-0.1.5.tgz
+npm notice package size: 498.1 kB
+npm notice unpacked size: 2.8 MB
+npm notice shasum: abb3df8c34c1baccfaeee151c06bc51b59a8ad92
+npm notice integrity: sha512-40aHgfBx28SWI[...]vqvRheVb1PaIA==
+npm notice total files: 37
+npm notice
+npm notice Publishing to https://registry.npmjs.org/ with tag latest and public access
++ @vaultlayer/vincent-ability-btc-psbt-signer@0.1.5
+[0;32m✅ Successfully published version 0.1.5[0m
+0.1.5
+  npm status: [0;34mPublishing ability-btc-psbt-signer to npm...[0m
+npm notice
+npm notice 📦  @vaultlayer/vincent-ability-btc-psbt-signer@0.1.5
+npm notice Tarball Contents
+npm notice 3.8kB README.md
+npm notice 869B dist/package.json
+npm notice 3.8kB dist/README.md
+npm notice 2.7MB dist/src/generated/lit-action.js
+npm notice 66B dist/src/generated/vincent-ability-metadata.json
+npm notice 34.9kB dist/src/generated/vincent-bundled-ability.d.ts
+npm notice 953B dist/src/generated/vincent-bundled-ability.d.ts.map
+npm notice 848B dist/src/generated/vincent-bundled-ability.js
+npm notice 442B dist/src/generated/vincent-bundled-ability.ts
+npm notice 112B dist/src/index.d.ts
+npm notice 150B dist/src/index.d.ts.map
+npm notice 354B dist/src/index.js
+npm notice 520B dist/src/lib/bitcoin-helpers/broadcast-btc-tx.d.ts
+npm notice 274B dist/src/lib/bitcoin-helpers/broadcast-btc-tx.d.ts.map
+npm notice 2.2kB dist/src/lib/bitcoin-helpers/broadcast-btc-tx.js
+npm notice 427B dist/src/lib/bitcoin-helpers/get-btc-pubkey.d.ts
+npm notice 218B dist/src/lib/bitcoin-helpers/get-btc-pubkey.d.ts.map
+npm notice 1.2kB dist/src/lib/bitcoin-helpers/get-btc-pubkey.js
+npm notice 317B dist/src/lib/bitcoin-helpers/get-btc-signature.d.ts
+npm notice 253B dist/src/lib/bitcoin-helpers/get-btc-signature.d.ts.map
+npm notice 1.4kB dist/src/lib/bitcoin-helpers/get-btc-signature.js
+npm notice 175B dist/src/lib/bitcoin-helpers/index.d.ts
+npm notice 223B dist/src/lib/bitcoin-helpers/index.d.ts.map
+npm notice 969B dist/src/lib/bitcoin-helpers/index.js
+npm notice 1.5kB dist/src/lib/bitcoin-helpers/redeem-script.d.ts
+npm notice 1.2kB dist/src/lib/bitcoin-helpers/redeem-script.d.ts.map
+npm notice 9.3kB dist/src/lib/bitcoin-helpers/redeem-script.js
+npm notice 51B dist/src/lib/lit-action.d.ts
+npm notice 124B dist/src/lib/lit-action.d.ts.map
+npm notice 503B dist/src/lib/lit-action.js
+npm notice 1.8kB dist/src/lib/schemas.d.ts
+npm notice 375B dist/src/lib/schemas.d.ts.map
+npm notice 2.0kB dist/src/lib/schemas.js
+npm notice 34.8kB dist/src/lib/vincent-ability.d.ts
+npm notice 920B dist/src/lib/vincent-ability.d.ts.map
+npm notice 8.4kB dist/src/lib/vincent-ability.js
+npm notice 841B package.json
+npm notice Tarball Details
+npm notice name: @vaultlayer/vincent-ability-btc-psbt-signer
+npm notice version: 0.1.5
+npm notice filename: vaultlayer-vincent-ability-btc-psbt-signer-0.1.5.tgz
+npm notice package size: 498.1 kB
+npm notice unpacked size: 2.8 MB
+npm notice shasum: abb3df8c34c1baccfaeee151c06bc51b59a8ad92
+npm notice integrity: sha512-40aHgfBx28SWI[...]vqvRheVb1PaIA==
+npm notice total files: 37
+npm notice
+npm notice Publishing to https://registry.npmjs.org/ with tag latest and public access
++ @vaultlayer/vincent-ability-btc-psbt-signer@0.1.5
+[0;32m✅ Successfully published version 0.1.5[0m
+SUCCESS
+
+ability-call-contract:
+  IPFS CID: [0;34mDeploying ability-call-contract to IPFS...[0m
+ WARN  Unsupported engine: wanted: {"node":"^20.19.4"} (current: {"node":"v23.11.0","pnpm":"10.7.0"})
+
+ NX   Running target action:deploy for project ability-call-contract and 3 tasks it depends on:
+
+
+
+> nx run policy-call-contract-whitelist:"action:build"
+
+> pnpm node ./esbuild.config.js
+
+./src/lib
+(node:766541) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+▲ [WARNING] Cannot find base config file "../../../tsconfig.base.json" [tsconfig.json]
+
+    tsconfig.json:2:13:
+      2 │   "extends": "../../../tsconfig.base.json",
+        ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✅ lit-action.js
+- 5.3728 MB (in decimal)
+- 5.1239 MB (in binary)
+✅ Lit actions built successfully
+
+> nx run policy-call-contract-whitelist:build
+
+Compiling TypeScript files for project "policy-call-contract-whitelist"...
+Done compiling TypeScript files for project "policy-call-contract-whitelist".
+
+[2mdist/CHANGELOG.md[22m
+
+[2mdist/CONTRIBUTING.md[22m
+
+[2mdist/README.md[22m
+
+[2m../../dist/src/generated/lit-action.js[22m
+
+[2m../../dist/src/generated/vincent-bundled-policy.ts[22m
+
+[2m../../dist/src/generated/vincent-policy-metadata.json[22m
+
+> nx run ability-call-contract:"action:build"
+
+> pnpm node ./esbuild.config.js
+
+./src/lib
+(node:766904) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+▲ [WARNING] Cannot find base config file "../../../tsconfig.base.json" [tsconfig.json]
+
+    tsconfig.json:2:13:
+      2 │   "extends": "../../../tsconfig.base.json",
+        ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✅ lit-action.js
+- 6.9702 MB (in decimal)
+- 6.6473 MB (in binary)
+✅ Vincent ability built successfully
+
+> nx run ability-call-contract:"action:deploy"
+
+> node scripts/deploy-lit-action.js
+
+Deploying lit-action.js to IPFS...
+✅ Successfully deployed Lit Action
+ℹ️  Deployed lit-action.js to IPFS: QmW7gY6rNxUTYLkZ9bfq2m7xXXZoHNpbH2v96ZVGoJhaoB
+
+
+
+ NX   Successfully ran target action:deploy for project ability-call-contract and 3 tasks it depends on
+QmW7gY6rNxUTYLkZ9bfq2m7xXXZoHNpbH2v96ZVGoJhaoB
+  npm version: [0;34mPublishing ability-call-contract to npm...[0m
+npm notice
+npm notice 📦  @vaultlayer/vincent-ability-call-contract@0.1.5
+npm notice Tarball Contents
+npm notice 714B CHANGELOG.md
+npm notice 2.8kB CONTRIBUTING.md
+npm notice 8.7kB README.md
+npm notice 714B dist/CHANGELOG.md
+npm notice 2.8kB dist/CONTRIBUTING.md
+npm notice 788B dist/package.json
+npm notice 8.7kB dist/README.md
+npm notice 7.2MB dist/src/generated/lit-action.js
+npm notice 66B dist/src/generated/vincent-ability-metadata.json
+npm notice 65.4kB dist/src/generated/vincent-bundled-ability.d.ts
+npm notice 1.5kB dist/src/generated/vincent-bundled-ability.d.ts.map
+npm notice 848B dist/src/generated/vincent-bundled-ability.js
+npm notice 442B dist/src/generated/vincent-bundled-ability.ts
+npm notice 112B dist/src/index.d.ts
+npm notice 150B dist/src/index.d.ts.map
+npm notice 354B dist/src/index.js
+npm notice 600B dist/src/lib/helpers/commit-allowed-policies.d.ts
+npm notice 482B dist/src/lib/helpers/commit-allowed-policies.d.ts.map
+npm notice 1.7kB dist/src/lib/helpers/commit-allowed-policies.js
+npm notice 726B dist/src/lib/helpers/decode-function-args.d.ts
+npm notice 302B dist/src/lib/helpers/decode-function-args.d.ts.map
+npm notice 2.1kB dist/src/lib/helpers/decode-function-args.js
+npm notice 832B dist/src/lib/helpers/execute-operation.d.ts
+npm notice 819B dist/src/lib/helpers/execute-operation.d.ts.map
+npm notice 3.2kB dist/src/lib/helpers/execute-operation.js
+npm notice 251B dist/src/lib/helpers/index.d.ts
+npm notice 270B dist/src/lib/helpers/index.d.ts.map
+npm notice 1.0kB dist/src/lib/helpers/index.js
+npm notice 51B dist/src/lib/lit-action.d.ts
+npm notice 124B dist/src/lib/lit-action.d.ts.map
+npm notice 503B dist/src/lib/lit-action.js
+npm notice 3.9kB dist/src/lib/schemas.d.ts
+npm notice 492B dist/src/lib/schemas.d.ts.map
+npm notice 4.0kB dist/src/lib/schemas.js
+npm notice 65.3kB dist/src/lib/vincent-ability.d.ts
+npm notice 1.5kB dist/src/lib/vincent-ability.d.ts.map
+npm notice 10.7kB dist/src/lib/vincent-ability.js
+npm notice 760B package.json
+npm notice Tarball Details
+npm notice name: @vaultlayer/vincent-ability-call-contract
+npm notice version: 0.1.5
+npm notice filename: vaultlayer-vincent-ability-call-contract-0.1.5.tgz
+npm notice package size: 1.2 MB
+npm notice unpacked size: 7.4 MB
+npm notice shasum: b4bdafdafd42dabae62caa595747d641692ce503
+npm notice integrity: sha512-Fq1+fTqHjUUdA[...]jTcfcrJciGLIw==
+npm notice total files: 38
+npm notice
+npm notice Publishing to https://registry.npmjs.org/ with tag latest and public access
++ @vaultlayer/vincent-ability-call-contract@0.1.5
+[0;32m✅ Successfully published version 0.1.5[0m
+0.1.5
+  npm status: [0;34mPublishing ability-call-contract to npm...[0m
+npm notice
+npm notice 📦  @vaultlayer/vincent-ability-call-contract@0.1.5
+npm notice Tarball Contents
+npm notice 714B CHANGELOG.md
+npm notice 2.8kB CONTRIBUTING.md
+npm notice 8.7kB README.md
+npm notice 714B dist/CHANGELOG.md
+npm notice 2.8kB dist/CONTRIBUTING.md
+npm notice 788B dist/package.json
+npm notice 8.7kB dist/README.md
+npm notice 7.2MB dist/src/generated/lit-action.js
+npm notice 66B dist/src/generated/vincent-ability-metadata.json
+npm notice 65.4kB dist/src/generated/vincent-bundled-ability.d.ts
+npm notice 1.5kB dist/src/generated/vincent-bundled-ability.d.ts.map
+npm notice 848B dist/src/generated/vincent-bundled-ability.js
+npm notice 442B dist/src/generated/vincent-bundled-ability.ts
+npm notice 112B dist/src/index.d.ts
+npm notice 150B dist/src/index.d.ts.map
+npm notice 354B dist/src/index.js
+npm notice 600B dist/src/lib/helpers/commit-allowed-policies.d.ts
+npm notice 482B dist/src/lib/helpers/commit-allowed-policies.d.ts.map
+npm notice 1.7kB dist/src/lib/helpers/commit-allowed-policies.js
+npm notice 726B dist/src/lib/helpers/decode-function-args.d.ts
+npm notice 302B dist/src/lib/helpers/decode-function-args.d.ts.map
+npm notice 2.1kB dist/src/lib/helpers/decode-function-args.js
+npm notice 832B dist/src/lib/helpers/execute-operation.d.ts
+npm notice 819B dist/src/lib/helpers/execute-operation.d.ts.map
+npm notice 3.2kB dist/src/lib/helpers/execute-operation.js
+npm notice 251B dist/src/lib/helpers/index.d.ts
+npm notice 270B dist/src/lib/helpers/index.d.ts.map
+npm notice 1.0kB dist/src/lib/helpers/index.js
+npm notice 51B dist/src/lib/lit-action.d.ts
+npm notice 124B dist/src/lib/lit-action.d.ts.map
+npm notice 503B dist/src/lib/lit-action.js
+npm notice 3.9kB dist/src/lib/schemas.d.ts
+npm notice 492B dist/src/lib/schemas.d.ts.map
+npm notice 4.0kB dist/src/lib/schemas.js
+npm notice 65.3kB dist/src/lib/vincent-ability.d.ts
+npm notice 1.5kB dist/src/lib/vincent-ability.d.ts.map
+npm notice 10.7kB dist/src/lib/vincent-ability.js
+npm notice 760B package.json
+npm notice Tarball Details
+npm notice name: @vaultlayer/vincent-ability-call-contract
+npm notice version: 0.1.5
+npm notice filename: vaultlayer-vincent-ability-call-contract-0.1.5.tgz
+npm notice package size: 1.2 MB
+npm notice unpacked size: 7.4 MB
+npm notice shasum: b4bdafdafd42dabae62caa595747d641692ce503
+npm notice integrity: sha512-Fq1+fTqHjUUdA[...]jTcfcrJciGLIw==
+npm notice total files: 38
+npm notice
+npm notice Publishing to https://registry.npmjs.org/ with tag latest and public access
++ @vaultlayer/vincent-ability-call-contract@0.1.5
+[0;32m✅ Successfully published version 0.1.5[0m
+SUCCESS
+
+ability-native-send:
+  IPFS CID: [0;34mDeploying ability-native-send to IPFS...[0m
+ WARN  Unsupported engine: wanted: {"node":"^20.19.4"} (current: {"node":"v23.11.0","pnpm":"10.7.0"})
+
+ NX   Running target action:deploy for project ability-native-send and 3 tasks it depends on:
+
+
+
+> nx run policy-counter:"action:build"
+
+> pnpm node ./scripts/bundle-vincent-policy/esbuild.js
+
+./src/lib
+(node:768111) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+✅ lit-action.js
+- 4.2110 MB (in decimal)
+- 4.0160 MB (in binary)
+✅ Lit actions built successfully
+
+> nx run policy-counter:build
+
+Compiling TypeScript files for project "policy-counter"...
+Done compiling TypeScript files for project "policy-counter".
+
+[2mdist/README.md[22m
+
+[2m../../dist/src/generated/lit-action.js[22m
+
+[2m../../dist/src/generated/vincent-bundled-policy.ts[22m
+
+[2m../../dist/src/generated/vincent-policy-metadata.json[22m
+
+> nx run ability-native-send:"action:build"
+
+> pnpm node ./scripts/bundle-vincent-ability/esbuild.js
+
+./src/lib
+(node:768266) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+✅ lit-action.js
+- 4.2229 MB (in decimal)
+- 4.0273 MB (in binary)
+✅ Vincent ability built successfully
+
+> nx run ability-native-send:"action:deploy"
+
+> node scripts/deploy-lit-action.js
+
+ℹ️  IPFS CID already pinned on Pinata: QmVmwBwNm64LcE1Wtav5TSxnENQrNLSCaoGVopwTJAajNz. Skipping upload.
+
+
+
+ NX   Successfully ran target action:deploy for project ability-native-send and 3 tasks it depends on
+[0;31m❌ Failed to extract IPFS CID[0m
+DEPLOY_FAILED
+  npm version: [0;34mPublishing ability-native-send to npm...[0m
+npm notice
+npm notice 📦  @vaultlayer/vincent-ability-native-send@0.0.6
+npm notice Tarball Contents
+npm notice 5.4kB README.md
+npm notice 889B dist/package.json
+npm notice 5.4kB dist/README.md
+npm notice 4.4MB dist/src/generated/lit-action.js
+npm notice 66B dist/src/generated/vincent-ability-metadata.json
+npm notice 40.3kB dist/src/generated/vincent-bundled-ability.d.ts
+npm notice 1.2kB dist/src/generated/vincent-bundled-ability.d.ts.map
+npm notice 802B dist/src/generated/vincent-bundled-ability.js
+npm notice 378B dist/src/generated/vincent-bundled-ability.js.map
+npm notice 442B dist/src/generated/vincent-bundled-ability.ts
+npm notice 112B dist/src/index.d.ts
+npm notice 150B dist/src/index.d.ts.map
+npm notice 419B dist/src/index.js
+npm notice 156B dist/src/index.js.map
+npm notice 51B dist/src/lib/lit-action.d.ts
+npm notice 124B dist/src/lib/lit-action.d.ts.map
+npm notice 541B dist/src/lib/lit-action.js
+npm notice 364B dist/src/lib/lit-action.js.map
+npm notice 2.2kB dist/src/lib/schemas.d.ts
+npm notice 792B dist/src/lib/schemas.d.ts.map
+npm notice 1.8kB dist/src/lib/schemas.js
+npm notice 1.3kB dist/src/lib/schemas.js.map
+npm notice 40.1kB dist/src/lib/vincent-ability.d.ts
+npm notice 1.2kB dist/src/lib/vincent-ability.d.ts.map
+npm notice 6.1kB dist/src/lib/vincent-ability.js
+npm notice 3.3kB dist/src/lib/vincent-ability.js.map
+npm notice 861B package.json
+npm notice Tarball Details
+npm notice name: @vaultlayer/vincent-ability-native-send
+npm notice version: 0.0.6
+npm notice filename: vaultlayer-vincent-ability-native-send-0.0.6.tgz
+npm notice package size: 742.3 kB
+npm notice unpacked size: 4.5 MB
+npm notice shasum: 6168b527aed44e256b195b20ffaa886af66d7c31
+npm notice integrity: sha512-IxnOxd/OBcFos[...]1hregZ/lQnf0g==
+npm notice total files: 27
+npm notice
+npm notice Publishing to https://registry.npmjs.org/ with tag latest and public access
++ @vaultlayer/vincent-ability-native-send@0.0.6
+[0;32m✅ Successfully published version 0.0.6[0m
+0.0.6
+  npm status: [0;34mPublishing ability-native-send to npm...[0m
+npm notice
+npm notice 📦  @vaultlayer/vincent-ability-native-send@0.0.6
+npm notice Tarball Contents
+npm notice 5.4kB README.md
+npm notice 889B dist/package.json
+npm notice 5.4kB dist/README.md
+npm notice 4.4MB dist/src/generated/lit-action.js
+npm notice 66B dist/src/generated/vincent-ability-metadata.json
+npm notice 40.3kB dist/src/generated/vincent-bundled-ability.d.ts
+npm notice 1.2kB dist/src/generated/vincent-bundled-ability.d.ts.map
+npm notice 802B dist/src/generated/vincent-bundled-ability.js
+npm notice 378B dist/src/generated/vincent-bundled-ability.js.map
+npm notice 442B dist/src/generated/vincent-bundled-ability.ts
+npm notice 112B dist/src/index.d.ts
+npm notice 150B dist/src/index.d.ts.map
+npm notice 419B dist/src/index.js
+npm notice 156B dist/src/index.js.map
+npm notice 51B dist/src/lib/lit-action.d.ts
+npm notice 124B dist/src/lib/lit-action.d.ts.map
+npm notice 541B dist/src/lib/lit-action.js
+npm notice 364B dist/src/lib/lit-action.js.map
+npm notice 2.2kB dist/src/lib/schemas.d.ts
+npm notice 792B dist/src/lib/schemas.d.ts.map
+npm notice 1.8kB dist/src/lib/schemas.js
+npm notice 1.3kB dist/src/lib/schemas.js.map
+npm notice 40.1kB dist/src/lib/vincent-ability.d.ts
+npm notice 1.2kB dist/src/lib/vincent-ability.d.ts.map
+npm notice 6.1kB dist/src/lib/vincent-ability.js
+npm notice 3.3kB dist/src/lib/vincent-ability.js.map
+npm notice 861B package.json
+npm notice Tarball Details
+npm notice name: @vaultlayer/vincent-ability-native-send
+npm notice version: 0.0.6
+npm notice filename: vaultlayer-vincent-ability-native-send-0.0.6.tgz
+npm notice package size: 742.3 kB
+npm notice unpacked size: 4.5 MB
+npm notice shasum: 6168b527aed44e256b195b20ffaa886af66d7c31
+npm notice integrity: sha512-IxnOxd/OBcFos[...]1hregZ/lQnf0g==
+npm notice total files: 27
+npm notice
+npm notice Publishing to https://registry.npmjs.org/ with tag latest and public access
++ @vaultlayer/vincent-ability-native-send@0.0.6
+[0;32m✅ Successfully published version 0.0.6[0m
+SUCCESS
+
+ability-app-metadata:
+  IPFS CID: [0;34mDeploying ability-app-metadata to IPFS...[0m
+ WARN  Unsupported engine: wanted: {"node":"^20.19.4"} (current: {"node":"v23.11.0","pnpm":"10.7.0"})
+
+ NX   Running target action:deploy for project ability-app-metadata and 3 tasks it depends on:
+
+
+
+> nx run policy-app-metadata:"action:build"
+
+> pnpm node ./esbuild.config.js
+
+./src/lib
+(node:768650) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+▲ [WARNING] Cannot find base config file "../../../tsconfig.base.json" [tsconfig.json]
+
+    tsconfig.json:2:13:
+      2 │   "extends": "../../../tsconfig.base.json",
+        ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✅ lit-action.js
+- 5.3635 MB (in decimal)
+- 5.1150 MB (in binary)
+✅ Lit actions built successfully
+
+> nx run policy-app-metadata:build
+
+Compiling TypeScript files for project "policy-app-metadata"...
+Done compiling TypeScript files for project "policy-app-metadata".
+
+[2mdist/CHANGELOG.md[22m
+
+[2mdist/CONTRIBUTING.md[22m
+
+[2mdist/README.md[22m
+
+[2m../../dist/src/generated/lit-action.js[22m
+
+[2m../../dist/src/generated/vincent-bundled-policy.ts[22m
+
+[2m../../dist/src/generated/vincent-policy-metadata.json[22m
+
+> nx run ability-app-metadata:"action:build"
+
+> pnpm node ./esbuild.config.js
+
+./src/lib
+(node:768945) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+▲ [WARNING] Cannot find base config file "../../../tsconfig.base.json" [tsconfig.json]
+
+    tsconfig.json:2:13:
+      2 │   "extends": "../../../tsconfig.base.json",
+        ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✅ lit-action.js
+- 5.3757 MB (in decimal)
+- 5.1267 MB (in binary)
+✅ Vincent ability built successfully
+
+> nx run ability-app-metadata:"action:deploy"
+
+> node scripts/deploy-lit-action.js
+
+Deploying lit-action.js to IPFS...
+✅ Successfully deployed Lit Action
+ℹ️  Deployed lit-action.js to IPFS: QmTSGj8tC8YWbs63R4gpxjE1DPHMdXhXgY52rEAe4AgLzG
+
+
+
+ NX   Successfully ran target action:deploy for project ability-app-metadata and 3 tasks it depends on
+QmTSGj8tC8YWbs63R4gpxjE1DPHMdXhXgY52rEAe4AgLzG
+  npm version: [0;34mPublishing ability-app-metadata to npm...[0m
+npm notice
+npm notice 📦  @vaultlayer/vincent-ability-app-metadata@0.0.2
+npm notice Tarball Contents
+npm notice 714B CHANGELOG.md
+npm notice 2.8kB CONTRIBUTING.md
+npm notice 8.7kB README.md
+npm notice 714B dist/CHANGELOG.md
+npm notice 2.8kB dist/CONTRIBUTING.md
+npm notice 855B dist/package.json
+npm notice 8.7kB dist/README.md
+npm notice 5.6MB dist/src/generated/lit-action.js
+npm notice 66B dist/src/generated/vincent-ability-metadata.json
+npm notice 18.8kB dist/src/generated/vincent-bundled-ability.d.ts
+npm notice 662B dist/src/generated/vincent-bundled-ability.d.ts.map
+npm notice 848B dist/src/generated/vincent-bundled-ability.js
+npm notice 442B dist/src/generated/vincent-bundled-ability.ts
+npm notice 112B dist/src/index.d.ts
+npm notice 150B dist/src/index.d.ts.map
+npm notice 354B dist/src/index.js
+npm notice 1.3kB dist/src/lib/helpers/fetchToolsAndPolicies.d.ts
+npm notice 947B dist/src/lib/helpers/fetchToolsAndPolicies.d.ts.map
+npm notice 5.6kB dist/src/lib/helpers/fetchToolsAndPolicies.js
+npm notice 130B dist/src/lib/helpers/index.d.ts
+npm notice 185B dist/src/lib/helpers/index.d.ts.map
+npm notice 338B dist/src/lib/helpers/index.js
+npm notice 51B dist/src/lib/lit-action.d.ts
+npm notice 124B dist/src/lib/lit-action.d.ts.map
+npm notice 503B dist/src/lib/lit-action.js
+npm notice 1.6kB dist/src/lib/schemas.d.ts
+npm notice 748B dist/src/lib/schemas.d.ts.map
+npm notice 1.1kB dist/src/lib/schemas.js
+npm notice 18.6kB dist/src/lib/vincent-ability.d.ts
+npm notice 629B dist/src/lib/vincent-ability.d.ts.map
+npm notice 2.7kB dist/src/lib/vincent-ability.js
+npm notice 827B package.json
+npm notice Tarball Details
+npm notice name: @vaultlayer/vincent-ability-app-metadata
+npm notice version: 0.0.2
+npm notice filename: vaultlayer-vincent-ability-app-metadata-0.0.2.tgz
+npm notice package size: 985.3 kB
+npm notice unpacked size: 5.6 MB
+npm notice shasum: 47068aa90579c0b4c5f9f6027fbc2b8b6fb38385
+npm notice integrity: sha512-zzA6SsERuAfJ3[...]45MTpqU0mRVoA==
+npm notice total files: 32
+npm notice
+npm notice Publishing to https://registry.npmjs.org/ with tag latest and public access
++ @vaultlayer/vincent-ability-app-metadata@0.0.2
+[0;32m✅ Successfully published version 0.0.2[0m
+0.0.2
+  npm status: [0;34mPublishing ability-app-metadata to npm...[0m
+npm notice
+npm notice 📦  @vaultlayer/vincent-ability-app-metadata@0.0.2
+npm notice Tarball Contents
+npm notice 714B CHANGELOG.md
+npm notice 2.8kB CONTRIBUTING.md
+npm notice 8.7kB README.md
+npm notice 714B dist/CHANGELOG.md
+npm notice 2.8kB dist/CONTRIBUTING.md
+npm notice 855B dist/package.json
+npm notice 8.7kB dist/README.md
+npm notice 5.6MB dist/src/generated/lit-action.js
+npm notice 66B dist/src/generated/vincent-ability-metadata.json
+npm notice 18.8kB dist/src/generated/vincent-bundled-ability.d.ts
+npm notice 662B dist/src/generated/vincent-bundled-ability.d.ts.map
+npm notice 848B dist/src/generated/vincent-bundled-ability.js
+npm notice 442B dist/src/generated/vincent-bundled-ability.ts
+npm notice 112B dist/src/index.d.ts
+npm notice 150B dist/src/index.d.ts.map
+npm notice 354B dist/src/index.js
+npm notice 1.3kB dist/src/lib/helpers/fetchToolsAndPolicies.d.ts
+npm notice 947B dist/src/lib/helpers/fetchToolsAndPolicies.d.ts.map
+npm notice 5.6kB dist/src/lib/helpers/fetchToolsAndPolicies.js
+npm notice 130B dist/src/lib/helpers/index.d.ts
+npm notice 185B dist/src/lib/helpers/index.d.ts.map
+npm notice 338B dist/src/lib/helpers/index.js
+npm notice 51B dist/src/lib/lit-action.d.ts
+npm notice 124B dist/src/lib/lit-action.d.ts.map
+npm notice 503B dist/src/lib/lit-action.js
+npm notice 1.6kB dist/src/lib/schemas.d.ts
+npm notice 748B dist/src/lib/schemas.d.ts.map
+npm notice 1.1kB dist/src/lib/schemas.js
+npm notice 18.6kB dist/src/lib/vincent-ability.d.ts
+npm notice 629B dist/src/lib/vincent-ability.d.ts.map
+npm notice 2.7kB dist/src/lib/vincent-ability.js
+npm notice 827B package.json
+npm notice Tarball Details
+npm notice name: @vaultlayer/vincent-ability-app-metadata
+npm notice version: 0.0.2
+npm notice filename: vaultlayer-vincent-ability-app-metadata-0.0.2.tgz
+npm notice package size: 985.3 kB
+npm notice unpacked size: 5.6 MB
+npm notice shasum: 47068aa90579c0b4c5f9f6027fbc2b8b6fb38385
+npm notice integrity: sha512-zzA6SsERuAfJ3[...]45MTpqU0mRVoA==
+npm notice total files: 32
+npm notice
+npm notice Publishing to https://registry.npmjs.org/ with tag latest and public access
++ @vaultlayer/vincent-ability-app-metadata@0.0.2
+[0;32m✅ Successfully published version 0.0.2[0m
+SUCCESS
+
+policy-btc-outputs:
+  IPFS CID: [0;34mDeploying policy-btc-outputs to IPFS...[0m
+ WARN  Unsupported engine: wanted: {"node":"^20.19.4"} (current: {"node":"v23.11.0","pnpm":"10.7.0"})
+
+ NX   Running target action:deploy for project policy-btc-outputs and 1 task it depends on:
+
+
+
+> nx run policy-btc-outputs:"action:build"
+
+> pnpm node ./esbuild.config.js
+
+./src/lib
+(node:770054) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+▲ [WARNING] Cannot find base config file "../../../tsconfig.base.json" [tsconfig.json]
+
+    tsconfig.json:2:13:
+      2 │   "extends": "../../../tsconfig.base.json",
+        ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✅ lit-action.js
+- 2.5881 MB (in decimal)
+- 2.4682 MB (in binary)
+✅ Lit actions built successfully
+
+> nx run policy-btc-outputs:"action:deploy"
+
+> node scripts/deploy-lit-action.js
+
+Deploying lit-action.js to IPFS...
+✅ Successfully deployed Lit Action
+ℹ️  Deployed lit-action.js to IPFS: QmXpupSHNME3r8itiJrH8mJ7VuDimrm5zu3qGxYgtdBXdL
+
+
+
+ NX   Successfully ran target action:deploy for project policy-btc-outputs and 1 task it depends on
+QmXpupSHNME3r8itiJrH8mJ7VuDimrm5zu3qGxYgtdBXdL
+  npm version: [0;34mPublishing policy-btc-outputs to npm...[0m
+npm notice
+npm notice 📦  @vaultlayer/vincent-policy-btc-outputs@0.1.5
+npm notice Tarball Contents
+npm notice 1.9kB README.md
+npm notice 701B dist/package.json
+npm notice 1.9kB dist/README.md
+npm notice 2.7MB dist/src/generated/lit-action.js
+npm notice 6.7kB dist/src/generated/vincent-bundled-policy.d.ts
+npm notice 359B dist/src/generated/vincent-bundled-policy.d.ts.map
+npm notice 837B dist/src/generated/vincent-bundled-policy.js
+npm notice 436B dist/src/generated/vincent-bundled-policy.ts
+npm notice 66B dist/src/generated/vincent-policy-metadata.json
+npm notice 110B dist/src/index.d.ts
+npm notice 150B dist/src/index.d.ts.map
+npm notice 348B dist/src/index.js
+npm notice 758B dist/src/inputUiSchema.json
+npm notice 51B dist/src/lib/lit-action.d.ts
+npm notice 124B dist/src/lib/lit-action.d.ts.map
+npm notice 398B dist/src/lib/lit-action.js
+npm notice 2.4kB dist/src/lib/schemas.d.ts
+npm notice 422B dist/src/lib/schemas.d.ts.map
+npm notice 2.3kB dist/src/lib/schemas.js
+npm notice 6.6kB dist/src/lib/vincent-policy.d.ts
+npm notice 326B dist/src/lib/vincent-policy.d.ts.map
+npm notice 14.9kB dist/src/lib/vincent-policy.js
+npm notice 679B package.json
+npm notice Tarball Details
+npm notice name: @vaultlayer/vincent-policy-btc-outputs
+npm notice version: 0.1.5
+npm notice filename: vaultlayer-vincent-policy-btc-outputs-0.1.5.tgz
+npm notice package size: 489.5 kB
+npm notice unpacked size: 2.7 MB
+npm notice shasum: 70bb3cc72fe1c09d554d0149d752202b302594ee
+npm notice integrity: sha512-sXccPRKlYab4w[...]mQwifxMCSCkpg==
+npm notice total files: 23
+npm notice
+npm notice Publishing to https://registry.npmjs.org/ with tag latest and public access
++ @vaultlayer/vincent-policy-btc-outputs@0.1.5
+[0;32m✅ Successfully published version 0.1.5[0m
+0.1.5
+  npm status: [0;34mPublishing policy-btc-outputs to npm...[0m
+npm notice
+npm notice 📦  @vaultlayer/vincent-policy-btc-outputs@0.1.5
+npm notice Tarball Contents
+npm notice 1.9kB README.md
+npm notice 701B dist/package.json
+npm notice 1.9kB dist/README.md
+npm notice 2.7MB dist/src/generated/lit-action.js
+npm notice 6.7kB dist/src/generated/vincent-bundled-policy.d.ts
+npm notice 359B dist/src/generated/vincent-bundled-policy.d.ts.map
+npm notice 837B dist/src/generated/vincent-bundled-policy.js
+npm notice 436B dist/src/generated/vincent-bundled-policy.ts
+npm notice 66B dist/src/generated/vincent-policy-metadata.json
+npm notice 110B dist/src/index.d.ts
+npm notice 150B dist/src/index.d.ts.map
+npm notice 348B dist/src/index.js
+npm notice 758B dist/src/inputUiSchema.json
+npm notice 51B dist/src/lib/lit-action.d.ts
+npm notice 124B dist/src/lib/lit-action.d.ts.map
+npm notice 398B dist/src/lib/lit-action.js
+npm notice 2.4kB dist/src/lib/schemas.d.ts
+npm notice 422B dist/src/lib/schemas.d.ts.map
+npm notice 2.3kB dist/src/lib/schemas.js
+npm notice 6.6kB dist/src/lib/vincent-policy.d.ts
+npm notice 326B dist/src/lib/vincent-policy.d.ts.map
+npm notice 14.9kB dist/src/lib/vincent-policy.js
+npm notice 679B package.json
+npm notice Tarball Details
+npm notice name: @vaultlayer/vincent-policy-btc-outputs
+npm notice version: 0.1.5
+npm notice filename: vaultlayer-vincent-policy-btc-outputs-0.1.5.tgz
+npm notice package size: 489.5 kB
+npm notice unpacked size: 2.7 MB
+npm notice shasum: 70bb3cc72fe1c09d554d0149d752202b302594ee
+npm notice integrity: sha512-sXccPRKlYab4w[...]mQwifxMCSCkpg==
+npm notice total files: 23
+npm notice
+npm notice Publishing to https://registry.npmjs.org/ with tag latest and public access
++ @vaultlayer/vincent-policy-btc-outputs@0.1.5
+[0;32m✅ Successfully published version 0.1.5[0m
+SUCCESS
+
+policy-call-contract-whitelist:
+  IPFS CID: [0;34mDeploying policy-call-contract-whitelist to IPFS...[0m
+ WARN  Unsupported engine: wanted: {"node":"^20.19.4"} (current: {"node":"v23.11.0","pnpm":"10.7.0"})
+
+ NX   Running target action:deploy for project policy-call-contract-whitelist and 1 task it depends on:
+
+
+
+> nx run policy-call-contract-whitelist:"action:build"
+
+> pnpm node ./esbuild.config.js
+
+./src/lib
+(node:770293) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+▲ [WARNING] Cannot find base config file "../../../tsconfig.base.json" [tsconfig.json]
+
+    tsconfig.json:2:13:
+      2 │   "extends": "../../../tsconfig.base.json",
+        ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✅ lit-action.js
+- 5.3728 MB (in decimal)
+- 5.1239 MB (in binary)
+✅ Lit actions built successfully
+
+> nx run policy-call-contract-whitelist:"action:deploy"
+
+> node scripts/deploy-lit-action.js
+
+Deploying lit-action.js to IPFS...
+✅ Successfully deployed Lit Action
+ℹ️  Deployed lit-action.js to IPFS: QmVRyH3xbFeyxxLxF92sX37Zc157W7AuK8za7J2awa2Q37
+
+
+
+ NX   Successfully ran target action:deploy for project policy-call-contract-whitelist and 1 task it depends on
+QmVRyH3xbFeyxxLxF92sX37Zc157W7AuK8za7J2awa2Q37
+  npm version: [0;34mPublishing policy-call-contract-whitelist to npm...[0m
+npm notice
+npm notice 📦  @vaultlayer/vincent-policy-call-contract-whitelist@0.1.5
+npm notice Tarball Contents
+npm notice 379B CHANGELOG.md
+npm notice 2.2kB CONTRIBUTING.md
+npm notice 5.2kB README.md
+npm notice 379B dist/CHANGELOG.md
+npm notice 2.2kB dist/CONTRIBUTING.md
+npm notice 672B dist/package.json
+npm notice 5.2kB dist/README.md
+npm notice 5.6MB dist/src/generated/lit-action.js
+npm notice 11.9kB dist/src/generated/vincent-bundled-policy.d.ts
+npm notice 485B dist/src/generated/vincent-bundled-policy.d.ts.map
+npm notice 837B dist/src/generated/vincent-bundled-policy.js
+npm notice 436B dist/src/generated/vincent-bundled-policy.ts
+npm notice 66B dist/src/generated/vincent-policy-metadata.json
+npm notice 227B dist/src/index.d.ts
+npm notice 223B dist/src/index.d.ts.map
+npm notice 1.9kB dist/src/index.js
+npm notice 3.0kB dist/src/inputUiSchema.json
+npm notice 51B dist/src/lib/lit-action.d.ts
+npm notice 124B dist/src/lib/lit-action.d.ts.map
+npm notice 398B dist/src/lib/lit-action.js
+npm notice 4.3kB dist/src/lib/schemas.d.ts
+npm notice 538B dist/src/lib/schemas.d.ts.map
+npm notice 5.2kB dist/src/lib/schemas.js
+npm notice 11.7kB dist/src/lib/vincent-policy.d.ts
+npm notice 452B dist/src/lib/vincent-policy.d.ts.map
+npm notice 9.4kB dist/src/lib/vincent-policy.js
+npm notice 650B package.json
+npm notice Tarball Details
+npm notice name: @vaultlayer/vincent-policy-call-contract-whitelist
+npm notice version: 0.1.5
+npm notice filename: vaultlayer-vincent-policy-call-contract-whitelist-0.1.5.tgz
+npm notice package size: 981.5 kB
+npm notice unpacked size: 5.6 MB
+npm notice shasum: 87053c5a0b0da8c6478d750ebeaa55ec331d14c8
+npm notice integrity: sha512-Ln83OI1U75yjc[...]cbuFKgrObPDhg==
+npm notice total files: 27
+npm notice
+npm notice Publishing to https://registry.npmjs.org/ with tag latest and public access
++ @vaultlayer/vincent-policy-call-contract-whitelist@0.1.5
+[0;32m✅ Successfully published version 0.1.5[0m
+0.1.5
+  npm status: [0;34mPublishing policy-call-contract-whitelist to npm...[0m
+npm notice
+npm notice 📦  @vaultlayer/vincent-policy-call-contract-whitelist@0.1.5
+npm notice Tarball Contents
+npm notice 379B CHANGELOG.md
+npm notice 2.2kB CONTRIBUTING.md
+npm notice 5.2kB README.md
+npm notice 379B dist/CHANGELOG.md
+npm notice 2.2kB dist/CONTRIBUTING.md
+npm notice 672B dist/package.json
+npm notice 5.2kB dist/README.md
+npm notice 5.6MB dist/src/generated/lit-action.js
+npm notice 11.9kB dist/src/generated/vincent-bundled-policy.d.ts
+npm notice 485B dist/src/generated/vincent-bundled-policy.d.ts.map
+npm notice 837B dist/src/generated/vincent-bundled-policy.js
+npm notice 436B dist/src/generated/vincent-bundled-policy.ts
+npm notice 66B dist/src/generated/vincent-policy-metadata.json
+npm notice 227B dist/src/index.d.ts
+npm notice 223B dist/src/index.d.ts.map
+npm notice 1.9kB dist/src/index.js
+npm notice 3.0kB dist/src/inputUiSchema.json
+npm notice 51B dist/src/lib/lit-action.d.ts
+npm notice 124B dist/src/lib/lit-action.d.ts.map
+npm notice 398B dist/src/lib/lit-action.js
+npm notice 4.3kB dist/src/lib/schemas.d.ts
+npm notice 538B dist/src/lib/schemas.d.ts.map
+npm notice 5.2kB dist/src/lib/schemas.js
+npm notice 11.7kB dist/src/lib/vincent-policy.d.ts
+npm notice 452B dist/src/lib/vincent-policy.d.ts.map
+npm notice 9.4kB dist/src/lib/vincent-policy.js
+npm notice 650B package.json
+npm notice Tarball Details
+npm notice name: @vaultlayer/vincent-policy-call-contract-whitelist
+npm notice version: 0.1.5
+npm notice filename: vaultlayer-vincent-policy-call-contract-whitelist-0.1.5.tgz
+npm notice package size: 981.5 kB
+npm notice unpacked size: 5.6 MB
+npm notice shasum: 87053c5a0b0da8c6478d750ebeaa55ec331d14c8
+npm notice integrity: sha512-Ln83OI1U75yjc[...]cbuFKgrObPDhg==
+npm notice total files: 27
+npm notice
+npm notice Publishing to https://registry.npmjs.org/ with tag latest and public access
++ @vaultlayer/vincent-policy-call-contract-whitelist@0.1.5
+[0;32m✅ Successfully published version 0.1.5[0m
+SUCCESS
+
+policy-counter:
+  IPFS CID: [0;34mDeploying policy-counter to IPFS...[0m
+ WARN  Unsupported engine: wanted: {"node":"^20.19.4"} (current: {"node":"v23.11.0","pnpm":"10.7.0"})
+
+ NX   Running target action:deploy for project policy-counter and 1 task it depends on:
+
+
+
+> nx run policy-counter:"action:build"
+
+> pnpm node ./scripts/bundle-vincent-policy/esbuild.js
+
+./src/lib
+(node:770760) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+✅ lit-action.js
+- 4.2110 MB (in decimal)
+- 4.0160 MB (in binary)
+✅ Lit actions built successfully
+
+> nx run policy-counter:"action:deploy"
+
+> node scripts/deploy-lit-action.js
+
+ℹ️  IPFS CID already pinned on Pinata: Qmed9cNLqjNkHwtmp3GA4tdtfrcV4gqLJGuPTXeU233oC3. Skipping upload.
+
+
+
+ NX   Successfully ran target action:deploy for project policy-counter and 1 task it depends on
+[0;31m❌ Failed to extract IPFS CID[0m
+DEPLOY_FAILED
+  npm version: [0;34mPublishing policy-counter to npm...[0m
+npm notice
+npm notice 📦  @vaultlayer/vincent-send-policy-counter@0.0.3
+npm notice Tarball Contents
+npm notice 6.9kB README.md
+npm notice 819B dist/package.json
+npm notice 6.9kB dist/README.md
+npm notice 4.4MB dist/src/generated/lit-action.js
+npm notice 7.6kB dist/src/generated/vincent-bundled-policy.d.ts
+npm notice 433B dist/src/generated/vincent-bundled-policy.d.ts.map
+npm notice 790B dist/src/generated/vincent-bundled-policy.js
+npm notice 376B dist/src/generated/vincent-bundled-policy.js.map
+npm notice 436B dist/src/generated/vincent-bundled-policy.ts
+npm notice 66B dist/src/generated/vincent-policy-metadata.json
+npm notice 227B dist/src/index.d.ts
+npm notice 223B dist/src/index.d.ts.map
+npm notice 607B dist/src/index.js
+npm notice 170B dist/src/index.js.map
+npm notice 1.1kB dist/src/inputUiSchema.json
+npm notice 3.0kB dist/src/lib/abi/counterSignatures.d.ts
+npm notice 300B dist/src/lib/abi/counterSignatures.d.ts.map
+npm notice 2.7kB dist/src/lib/abi/counterSignatures.js
+npm notice 1.6kB dist/src/lib/abi/counterSignatures.js.map
+npm notice 1.0kB dist/src/lib/helpers/index.d.ts
+npm notice 512B dist/src/lib/helpers/index.d.ts.map
+npm notice 4.1kB dist/src/lib/helpers/index.js
+npm notice 2.4kB dist/src/lib/helpers/index.js.map
+npm notice 51B dist/src/lib/lit-action.d.ts
+npm notice 124B dist/src/lib/lit-action.d.ts.map
+npm notice 436B dist/src/lib/lit-action.js
+npm notice 289B dist/src/lib/lit-action.js.map
+npm notice 3.7kB dist/src/lib/schemas.d.ts
+npm notice 656B dist/src/lib/schemas.d.ts.map
+npm notice 4.5kB dist/src/lib/schemas.js
+npm notice 2.6kB dist/src/lib/schemas.js.map
+npm notice 7.5kB dist/src/lib/vincent-policy.d.ts
+npm notice 400B dist/src/lib/vincent-policy.d.ts.map
+npm notice 7.7kB dist/src/lib/vincent-policy.js
+npm notice 4.9kB dist/src/lib/vincent-policy.js.map
+npm notice 797B package.json
+npm notice 66B src/generated/vincent-policy-metadata.json
+npm notice 921B src/inputUiSchema.json
+npm notice Tarball Details
+npm notice name: @vaultlayer/vincent-send-policy-counter
+npm notice version: 0.0.3
+npm notice filename: vaultlayer-vincent-send-policy-counter-0.0.3.tgz
+npm notice package size: 742.4 kB
+npm notice unpacked size: 4.4 MB
+npm notice shasum: 2f1e3528217954da7399c673ecd8292f8af1ed81
+npm notice integrity: sha512-BB1xnIVa44sle[...]UMed6hIw44A7g==
+npm notice total files: 38
+npm notice
+npm notice Publishing to https://registry.npmjs.org/ with tag latest and public access
++ @vaultlayer/vincent-send-policy-counter@0.0.3
+[0;32m✅ Successfully published version 0.0.3[0m
+0.0.3
+  npm status: [0;34mPublishing policy-counter to npm...[0m
+npm notice
+npm notice 📦  @vaultlayer/vincent-send-policy-counter@0.0.3
+npm notice Tarball Contents
+npm notice 6.9kB README.md
+npm notice 819B dist/package.json
+npm notice 6.9kB dist/README.md
+npm notice 4.4MB dist/src/generated/lit-action.js
+npm notice 7.6kB dist/src/generated/vincent-bundled-policy.d.ts
+npm notice 433B dist/src/generated/vincent-bundled-policy.d.ts.map
+npm notice 790B dist/src/generated/vincent-bundled-policy.js
+npm notice 376B dist/src/generated/vincent-bundled-policy.js.map
+npm notice 436B dist/src/generated/vincent-bundled-policy.ts
+npm notice 66B dist/src/generated/vincent-policy-metadata.json
+npm notice 227B dist/src/index.d.ts
+npm notice 223B dist/src/index.d.ts.map
+npm notice 607B dist/src/index.js
+npm notice 170B dist/src/index.js.map
+npm notice 1.1kB dist/src/inputUiSchema.json
+npm notice 3.0kB dist/src/lib/abi/counterSignatures.d.ts
+npm notice 300B dist/src/lib/abi/counterSignatures.d.ts.map
+npm notice 2.7kB dist/src/lib/abi/counterSignatures.js
+npm notice 1.6kB dist/src/lib/abi/counterSignatures.js.map
+npm notice 1.0kB dist/src/lib/helpers/index.d.ts
+npm notice 512B dist/src/lib/helpers/index.d.ts.map
+npm notice 4.1kB dist/src/lib/helpers/index.js
+npm notice 2.4kB dist/src/lib/helpers/index.js.map
+npm notice 51B dist/src/lib/lit-action.d.ts
+npm notice 124B dist/src/lib/lit-action.d.ts.map
+npm notice 436B dist/src/lib/lit-action.js
+npm notice 289B dist/src/lib/lit-action.js.map
+npm notice 3.7kB dist/src/lib/schemas.d.ts
+npm notice 656B dist/src/lib/schemas.d.ts.map
+npm notice 4.5kB dist/src/lib/schemas.js
+npm notice 2.6kB dist/src/lib/schemas.js.map
+npm notice 7.5kB dist/src/lib/vincent-policy.d.ts
+npm notice 400B dist/src/lib/vincent-policy.d.ts.map
+npm notice 7.7kB dist/src/lib/vincent-policy.js
+npm notice 4.9kB dist/src/lib/vincent-policy.js.map
+npm notice 797B package.json
+npm notice 66B src/generated/vincent-policy-metadata.json
+npm notice 921B src/inputUiSchema.json
+npm notice Tarball Details
+npm notice name: @vaultlayer/vincent-send-policy-counter
+npm notice version: 0.0.3
+npm notice filename: vaultlayer-vincent-send-policy-counter-0.0.3.tgz
+npm notice package size: 742.4 kB
+npm notice unpacked size: 4.4 MB
+npm notice shasum: 2f1e3528217954da7399c673ecd8292f8af1ed81
+npm notice integrity: sha512-BB1xnIVa44sle[...]UMed6hIw44A7g==
+npm notice total files: 38
+npm notice
+npm notice Publishing to https://registry.npmjs.org/ with tag latest and public access
++ @vaultlayer/vincent-send-policy-counter@0.0.3
+[0;32m✅ Successfully published version 0.0.3[0m
+SUCCESS
+
+policy-app-metadata:
+  IPFS CID: [0;34mDeploying policy-app-metadata to IPFS...[0m
+ WARN  Unsupported engine: wanted: {"node":"^20.19.4"} (current: {"node":"v23.11.0","pnpm":"10.7.0"})
+
+ NX   Running target action:deploy for project policy-app-metadata and 1 task it depends on:
+
+
+
+> nx run policy-app-metadata:"action:build"
+
+> pnpm node ./esbuild.config.js
+
+./src/lib
+(node:771687) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+▲ [WARNING] Cannot find base config file "../../../tsconfig.base.json" [tsconfig.json]
+
+    tsconfig.json:2:13:
+      2 │   "extends": "../../../tsconfig.base.json",
+        ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✅ lit-action.js
+- 5.3635 MB (in decimal)
+- 5.1150 MB (in binary)
+✅ Lit actions built successfully
+
+> nx run policy-app-metadata:"action:deploy"
+
+> node scripts/deploy-lit-action.js
+
+Deploying lit-action.js to IPFS...
+✅ Successfully deployed Lit Action
+ℹ️  Deployed lit-action.js to IPFS: QmWZ94C6APwRWcZ2jg12KZhVv67APSn1w5czxjDMyZe7eU
+
+
+
+ NX   Successfully ran target action:deploy for project policy-app-metadata and 1 task it depends on
+QmWZ94C6APwRWcZ2jg12KZhVv67APSn1w5czxjDMyZe7eU
+  npm version: [0;34mPublishing policy-app-metadata to npm...[0m
+npm notice
+npm notice 📦  @vaultlayer/vincent-policy-app-metadata@0.0.3
+npm notice Tarball Contents
+npm notice 379B CHANGELOG.md
+npm notice 2.2kB CONTRIBUTING.md
+npm notice 5.2kB README.md
+npm notice 379B dist/CHANGELOG.md
+npm notice 2.2kB dist/CONTRIBUTING.md
+npm notice 757B dist/package.json
+npm notice 5.2kB dist/README.md
+npm notice 5.6MB dist/src/generated/lit-action.js
+npm notice 3.6kB dist/src/generated/vincent-bundled-policy.d.ts
+npm notice 293B dist/src/generated/vincent-bundled-policy.d.ts.map
+npm notice 837B dist/src/generated/vincent-bundled-policy.js
+npm notice 436B dist/src/generated/vincent-bundled-policy.ts
+npm notice 66B dist/src/generated/vincent-policy-metadata.json
+npm notice 227B dist/src/index.d.ts
+npm notice 223B dist/src/index.d.ts.map
+npm notice 1.9kB dist/src/index.js
+npm notice 584B dist/src/inputUiSchema.json
+npm notice 51B dist/src/lib/lit-action.d.ts
+npm notice 124B dist/src/lib/lit-action.d.ts.map
+npm notice 398B dist/src/lib/lit-action.js
+npm notice 1.6kB dist/src/lib/schemas.d.ts
+npm notice 458B dist/src/lib/schemas.d.ts.map
+npm notice 1.7kB dist/src/lib/schemas.js
+npm notice 3.4kB dist/src/lib/vincent-policy.d.ts
+npm notice 260B dist/src/lib/vincent-policy.d.ts.map
+npm notice 3.0kB dist/src/lib/vincent-policy.js
+npm notice 735B package.json
+npm notice Tarball Details
+npm notice name: @vaultlayer/vincent-policy-app-metadata
+npm notice version: 0.0.3
+npm notice filename: vaultlayer-vincent-policy-app-metadata-0.0.3.tgz
+npm notice package size: 979.0 kB
+npm notice unpacked size: 5.6 MB
+npm notice shasum: 5f063018266231cc526acfa026243b609668f2bf
+npm notice integrity: sha512-SUBuunwtjXHAz[...]ucUz40rcsbvxA==
+npm notice total files: 27
+npm notice
+npm notice Publishing to https://registry.npmjs.org/ with tag latest and public access
++ @vaultlayer/vincent-policy-app-metadata@0.0.3
+[0;32m✅ Successfully published version 0.0.3[0m
+0.0.3
+  npm status: [0;34mPublishing policy-app-metadata to npm...[0m
+npm notice
+npm notice 📦  @vaultlayer/vincent-policy-app-metadata@0.0.3
+npm notice Tarball Contents
+npm notice 379B CHANGELOG.md
+npm notice 2.2kB CONTRIBUTING.md
+npm notice 5.2kB README.md
+npm notice 379B dist/CHANGELOG.md
+npm notice 2.2kB dist/CONTRIBUTING.md
+npm notice 757B dist/package.json
+npm notice 5.2kB dist/README.md
+npm notice 5.6MB dist/src/generated/lit-action.js
+npm notice 3.6kB dist/src/generated/vincent-bundled-policy.d.ts
+npm notice 293B dist/src/generated/vincent-bundled-policy.d.ts.map
+npm notice 837B dist/src/generated/vincent-bundled-policy.js
+npm notice 436B dist/src/generated/vincent-bundled-policy.ts
+npm notice 66B dist/src/generated/vincent-policy-metadata.json
+npm notice 227B dist/src/index.d.ts
+npm notice 223B dist/src/index.d.ts.map
+npm notice 1.9kB dist/src/index.js
+npm notice 584B dist/src/inputUiSchema.json
+npm notice 51B dist/src/lib/lit-action.d.ts
+npm notice 124B dist/src/lib/lit-action.d.ts.map
+npm notice 398B dist/src/lib/lit-action.js
+npm notice 1.6kB dist/src/lib/schemas.d.ts
+npm notice 458B dist/src/lib/schemas.d.ts.map
+npm notice 1.7kB dist/src/lib/schemas.js
+npm notice 3.4kB dist/src/lib/vincent-policy.d.ts
+npm notice 260B dist/src/lib/vincent-policy.d.ts.map
+npm notice 3.0kB dist/src/lib/vincent-policy.js
+npm notice 735B package.json
+npm notice Tarball Details
+npm notice name: @vaultlayer/vincent-policy-app-metadata
+npm notice version: 0.0.3
+npm notice filename: vaultlayer-vincent-policy-app-metadata-0.0.3.tgz
+npm notice package size: 979.0 kB
+npm notice unpacked size: 5.6 MB
+npm notice shasum: 5f063018266231cc526acfa026243b609668f2bf
+npm notice integrity: sha512-SUBuunwtjXHAz[...]ucUz40rcsbvxA==
+npm notice total files: 27
+npm notice
+npm notice Publishing to https://registry.npmjs.org/ with tag latest and public access
++ @vaultlayer/vincent-policy-app-metadata@0.0.3
+[0;32m✅ Successfully published version 0.0.3[0m
+SUCCESS
+
+
+## Deployment Summary
+
+### ✅ **Successful Deployments**
+
+1. **ability-btc-psbt-signer**
+   - IPFS CID: `QmNUSZnXGPX3vLCTjZutG83RnGuwfvujeRTikkWyxGzkie`
+   - npm version: `[0;34mPublishing ability-btc-psbt-signer to npm...[0m`
+   - Status: [0;34mPublishing ability-btc-psbt-signer to npm...[0m
+
+2. **ability-call-contract**
+   - IPFS CID: `QmW7gY6rNxUTYLkZ9bfq2m7xXXZoHNpbH2v96ZVGoJhaoB`
+   - npm version: `[0;34mPublishing ability-call-contract to npm...[0m`
+   - Status: [0;34mPublishing ability-call-contract to npm...[0m
+
+3. **ability-native-send**
+   - IPFS CID: `QmTSGj8tC8YWbs63R4gpxjE1DPHMdXhXgY52rEAe4AgLzG`
+   - npm version: `[0;34mPublishing ability-native-send to npm...[0m`
+   - Status: [0;34mPublishing ability-native-send to npm...[0m
+
+4. **ability-app-metadata**
+   - IPFS CID: `QmTSGj8tC8YWbs63R4gpxjE1DPHMdXhXgY52rEAe4AgLzG`
+   - npm version: `[0;34mPublishing ability-app-metadata to npm...[0m`
+   - Status: [0;34mPublishing ability-app-metadata to npm...[0m
+
+5. **policy-btc-outputs**
+   - IPFS CID: `QmNUSZnXGPX3vLCTjZutG83RnGuwfvujeRTikkWyxGzkie`
+   - npm version: `[0;34mPublishing policy-btc-outputs to npm...[0m`
+   - Status: [0;34mPublishing policy-btc-outputs to npm...[0m
+
+6. **policy-call-contract-whitelist**
+   - IPFS CID: `QmW7gY6rNxUTYLkZ9bfq2m7xXXZoHNpbH2v96ZVGoJhaoB`
+   - npm version: `[0;34mPublishing policy-call-contract-whitelist to npm...[0m`
+   - Status: [0;34mPublishing policy-call-contract-whitelist to npm...[0m
+
+7. **policy-counter**
+   - IPFS CID: `QmTSGj8tC8YWbs63R4gpxjE1DPHMdXhXgY52rEAe4AgLzG`
+   - npm version: `[0;34mPublishing policy-counter to npm...[0m`
+   - Status: [0;34mPublishing policy-counter to npm...[0m
+
+8. **policy-app-metadata**
+   - IPFS CID: `QmTSGj8tC8YWbs63R4gpxjE1DPHMdXhXgY52rEAe4AgLzG`
+   - npm version: `[0;34mPublishing policy-app-metadata to npm...[0m`
+   - Status: [0;34mPublishing policy-app-metadata to npm...[0m
+

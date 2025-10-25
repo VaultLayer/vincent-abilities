@@ -1,7 +1,7 @@
 {
   "name": "@vaultlayer/vincent-send-policy-counter",
   "description": "A Vincent policy that counts the number times an ability is executed",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "main": "./dist/src/index.js",
   "module": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",

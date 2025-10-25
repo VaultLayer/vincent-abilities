@@ -280,17 +280,6 @@ export const vincentAbility = createVincentAbility({
         '[@vaultlayer/vincent-ability-call-contract/execute] 🚀 Attempting contract call...',
       );
 
-      // Commit policy changes to the blockchain before the transaction
-      const policyCommitResults = await commitAllowedPolicies(
-        policiesContext,
-        '[@vaultlayer/vincent-ability-call-contract/execute]',
-      );
-
-      console.log(
-        '[@vaultlayer/vincent-ability-call-contract/execute] ✅ Policy commit results:',
-        policyCommitResults,
-      );
-
       // Execute the contract call using helper
       const txHash = await executeOperation(contractCallData);
 

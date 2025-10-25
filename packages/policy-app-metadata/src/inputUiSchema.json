@@ -1,0 +1,20 @@
+{
+  "jsonSchema": {
+    "type": "object",
+    "properties": {
+      "vlMetadata": {
+        "type": "string",
+        "title": "Metadata",
+        "description": "Optional metadata to store with the policy. This should be a JSON stringified string (e.g., JSON.stringify({...}))."
+      }
+    },
+    "required": []
+  },
+  "uiSchema": {
+    "vlMetadata": {
+      "ui:widget": "textarea",
+      "ui:placeholder": "",
+      "ui:help": "Enter a JSON stringified string to store as metadata"
+    }
+  }
+}
