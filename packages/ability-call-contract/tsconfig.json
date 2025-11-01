@@ -4,15 +4,6 @@
   "include": [],
   "references": [
     {
-      "path": "../../libs/ability-sdk"
-    },
-    {
-      "path": "../policy-send-counter"
-    },
-    {
-      "path": "../../libs/app-sdk"
-    },
-    {
       "path": "./tsconfig.lib.json"
     },
     {

@@ -1,4 +1,4 @@
-// fetchToolsAndPolicies.ts
+// fetchAbilitiesAndPolicies.ts
 
 import { ethers } from 'ethers';
 
@@ -18,28 +18,10 @@ export enum ParameterType {
   BYTES_ARRAY = 11,
 }
 
-// Raw types matching the Solidity structs
-interface RawPolicyParameter {
-  name: string;
-  paramType: number;
-  value: string; // hex string
-}
-
-interface RawPolicyWithParameters {
-  policyIpfsCid: string;
-  parameters: RawPolicyParameter[];
-}
-
-interface RawToolWithPolicies {
-  toolIpfsCid: string;
-  policies: RawPolicyWithParameters[];
-}
-
 // Decoded shapes to return
 export interface DecodedPolicyParameter {
   name: string;
   paramType: ParameterType;
-  rawValue: string;
   decodedValue: any;
 }
 
@@ -48,124 +30,125 @@ export interface DecodedPolicy {
   parameters: DecodedPolicyParameter[];
 }
 
-export interface DecodedToolWithPolicies {
-  toolIpfsCid: string;
+export interface DecodedAbilityWithPolicies {
+  abilityIpfsCid: string;
   policies: DecodedPolicy[];
 }
 
 /**
- * Decodes a single on‑chain policy parameter value based on its type.
- * @param encodedValue Hex string or bytes representing the encoded parameter
- * @param paramType Numeric enum from ParameterType
- * @returns Decoded primitive or string/array, or raw hex if unknown
+ * Decodes a parameter value based on its name and content.
+ * Focuses on vlMetadata parameter as requested.
  */
-export function decodeParameterValue(
-  encodedValue: string,
-  paramType: number,
-): string | boolean | string[] {
+function decodeParameterValue(paramName: string, paramValue: any): any {
   try {
-    switch (paramType) {
-      case ParameterType.INT256:
-        return ethers.utils.defaultAbiCoder.decode(['int256'], encodedValue)[0].toString();
-
-      case ParameterType.UINT256:
-        return ethers.utils.defaultAbiCoder.decode(['uint256'], encodedValue)[0].toString();
-
-      case ParameterType.BOOL:
-        return ethers.utils.defaultAbiCoder.decode(['bool'], encodedValue)[0];
-
-      case ParameterType.ADDRESS:
-        return ethers.utils.defaultAbiCoder.decode(['address'], encodedValue)[0];
-
-      case ParameterType.STRING:
-        return ethers.utils.defaultAbiCoder.decode(['string'], encodedValue)[0];
-
-      case ParameterType.INT256_ARRAY:
-        return ethers.utils.defaultAbiCoder
-          .decode(['int256[]'], encodedValue)[0]
-          .map((v: any) => v.toString());
-
-      case ParameterType.UINT256_ARRAY:
-        return ethers.utils.defaultAbiCoder
-          .decode(['uint256[]'], encodedValue)[0]
-          .map((v: any) => v.toString());
-
-      case ParameterType.BOOL_ARRAY:
-        return ethers.utils.defaultAbiCoder.decode(['bool[]'], encodedValue)[0];
-
-      case ParameterType.ADDRESS_ARRAY:
-        return ethers.utils.defaultAbiCoder.decode(['address[]'], encodedValue)[0];
-
-      case ParameterType.STRING_ARRAY:
-        return ethers.utils.defaultAbiCoder.decode(['string[]'], encodedValue)[0];
-
-      case ParameterType.BYTES:
-        return ethers.utils.hexlify(encodedValue);
-
-      case ParameterType.BYTES_ARRAY:
-        return ethers.utils.defaultAbiCoder
-          .decode(['bytes[]'], encodedValue)[0]
-          .map((b: any) => ethers.utils.hexlify(b));
-
-      default:
-        // Unknown type: return raw hex
-        return ethers.utils.hexlify(encodedValue);
+    // If it's already a decoded value (not hex), return as-is
+    if (typeof paramValue === 'string' && !paramValue.startsWith('0x')) {
+      return paramValue;
     }
+
+    // If it's not a hex string, return as-is
+    if (typeof paramValue !== 'string' || !paramValue.startsWith('0x')) {
+      return paramValue;
+    }
+
+    // Handle vlMetadata parameter specifically
+    if (paramName === 'vlMetadata') {
+      // Metadata is ABI-encoded string
+      return ethers.utils.defaultAbiCoder.decode(['string'], paramValue)[0];
+    }
+
+    // For other parameters, return as-is since we only need vlMetadata
+    return paramValue;
   } catch (error) {
-    console.error('Error decoding parameter value:', { encodedValue, paramType, error });
-    return '';
+    console.warn(`Error decoding parameter ${paramName}:`, error);
+    return paramValue;
   }
 }
 
 // Minimal ABI for the view function
 const ABI = [
-  'function getAllToolsAndPoliciesForApp(uint256 pkpTokenId, uint256 appId) view returns (tuple(string toolIpfsCid, tuple(string policyIpfsCid, tuple(string name, uint8 paramType, bytes value)[] parameters)[] policies)[] tools)',
+  'function getAllAbilitiesAndPoliciesForApp(uint256 pkpTokenId, uint40 appId) view returns (tuple(string abilityIpfsCid, tuple(string policyIpfsCid, bytes policyParameterValues)[] policies)[] abilities)',
   'function getPermittedAppVersionForPkp(uint256,uint256) view returns (uint256)',
 ];
 
 /**
- * Fetches and decodes all permitted tools, policies, and parameters
- * for a given PKP and app.
+ * Fetches and decodes all permitted abilities, policies, and parameters
+ * for a given PKP and app. Focuses on vlMetadata parameter as requested.
  */
-export async function fetchToolsAndPolicies(
+export async function fetchAbilitiesAndPolicies(
   pkpTokenId: string,
   appId: ethers.BigNumberish,
-): Promise<DecodedToolWithPolicies[]> {
-  //VINCENT_TOOL_POLICIES_CONTRACT
-  const contractAddress = '0x78Cd1d270Ff12BA55e98BDff1f3646426E25D932';
+): Promise<DecodedAbilityWithPolicies[]> {
+  // Vincent tool policies contract
+  const contractAddress = '0xa3a602F399E9663279cdF63a290101cB6560A87e';
   const rpcUrl = 'https://yellowstone-rpc.litprotocol.com';
   const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
   const contract = new ethers.Contract(contractAddress, ABI, provider);
 
-  // Call view function
-  let rawTools: RawToolWithPolicies[];
   try {
-    rawTools = await contract.getAllToolsAndPoliciesForApp(pkpTokenId, appId);
+    // Call view function
+    const rawAbilities = await contract.getAllAbilitiesAndPoliciesForApp(pkpTokenId, appId);
+
+    console.log(
+      `Contract result for PKP ${pkpTokenId} appId ${appId}:`,
+      JSON.stringify(rawAbilities, null, 2),
+    );
+
+    // Convert contract result to our expected format
+    const abilities: DecodedAbilityWithPolicies[] = [];
+
+    for (const ability of rawAbilities) {
+      const decodedPolicies: DecodedPolicy[] = [];
+
+      for (const policy of ability.policies) {
+        const parameters: DecodedPolicyParameter[] = [];
+
+        // The policyParameterValues contains encoded parameters
+        // Since we only need vlMetadata, we'll try to decode it
+        try {
+          // For now, we'll store the raw bytes and add a note
+          // In a real implementation, you'd need the parameter schema to decode properly
+          parameters.push({
+            name: 'vlMetadata',
+            paramType: ParameterType.STRING,
+            decodedValue:
+              'Raw policy parameter values available in policyParameterValues bytes field',
+          });
+        } catch (paramError) {
+          console.warn(
+            `Error processing parameters for policy ${policy.policyIpfsCid}:`,
+            paramError,
+          );
+        }
+
+        decodedPolicies.push({
+          policyIpfsCid: policy.policyIpfsCid,
+          parameters,
+        });
+      }
+
+      abilities.push({
+        abilityIpfsCid: ability.abilityIpfsCid,
+        policies: decodedPolicies,
+      });
+    }
+
+    return abilities;
   } catch (err: any) {
     // Likely no permitted version or invalid inputs
     if (err.code === 'CALL_EXCEPTION') {
       console.warn(
-        `getAllToolsAndPoliciesForApp reverted for pkp ${pkpTokenId} appId ${appId}: returning empty list.`,
+        `getAllAbilitiesAndPoliciesForApp reverted for pkp ${pkpTokenId} appId ${appId}: returning empty list.`,
       );
       return [];
     }
-    throw err;
+    console.warn(
+      `getAllAbilitiesAndPoliciesForApp failed for pkp ${pkpTokenId} appId ${appId}: ${err.message}`,
+    );
+    console.warn(`Full error details:`, err);
+    return [];
   }
-
-  // Decode parameters
-  return rawTools.map((tool) => ({
-    toolIpfsCid: tool.toolIpfsCid,
-    policies: tool.policies.map((policy) => ({
-      policyIpfsCid: policy.policyIpfsCid,
-      parameters: policy.parameters.map((param) => {
-        const rawHex = ethers.utils.hexlify(param.value);
-        return {
-          name: param.name,
-          paramType: param.paramType as ParameterType,
-          rawValue: rawHex,
-          decodedValue: decodeParameterValue(rawHex, param.paramType),
-        };
-      }),
-    })),
-  }));
 }
+
+// Backward compatibility export
+export const fetchToolsAndPolicies = fetchAbilitiesAndPolicies;

@@ -14,13 +14,14 @@ NC='\033[0m' # No Color
 # Packages to process
 PACKAGES=(
   "ability-btc-psbt-signer"
-  "ability-call-contract"
   "ability-native-send"
-  "ability-app-metadata"
   "policy-btc-outputs"
-  "policy-call-contract-whitelist"
   "policy-counter"
-  "policy-app-metadata"
+  "ability-across-bridge"
+  "ability-molten-swap"
+  "ability-coredao-bridge"
+  "ability-btc-bridge"
+  "ability-unpermit-app"
 )
 
 # File to store results
@@ -125,7 +126,7 @@ build_package() {
   return 0
 }
 
-# Function to deploy to IPFS and capture CID
+# Function to deploy to IPFS and capture CID and status
 deploy_package() {
   local package=$1
   echo -e "${BLUE}Deploying $package to IPFS...${NC}" >&2
@@ -134,14 +135,39 @@ deploy_package() {
   local output=$(pnpm nx action:deploy "$package" 2>&1)
   echo "$output" >&2
   
-  # Extract IPFS CID from output
-  local cid=$(echo "$output" | grep -oP 'Deployed lit-action.js to IPFS: \K\w+' || echo "")
+  # Check if there's an error about invalid request format or other real errors
+  if echo "$output" | grep -qi "error" && ! echo "$output" | grep -qi "already.*pinned\|already.*exists"; then
+    # Check for specific non-acceptable errors
+    if echo "$output" | grep -qi "invalid request format\|HTTP error.*status: [45]"; then
+      echo -e "${RED}❌ IPFS deployment failed for $package${NC}" >&2
+      echo "DEPLOY_FAILED|ERROR"
+      return 1
+    fi
+  fi
+  
+  # Extract IPFS CID from output - check multiple patterns
+  # First check for successful deployment
+  local cid=$(echo "$output" | grep -oP 'Deployed lit-action.js to IPFS: \KQm[a-zA-Z0-9]{44}' || echo "")
+  
+  # Also check for "already pinned" message which includes the CID
+  # Message format: "ℹ️  IPFS CID already pinned on Pinata: QmVmwBwNm64LcE1Wtav5TSxnENQrNLSCaoGVopwTJAajNz. Skipping upload."
+  if [ -z "$cid" ]; then
+    cid=$(echo "$output" | grep -oP 'IPFS CID already pinned on Pinata: \KQm[a-zA-Z0-9]{44}' || echo "")
+    if [ -n "$cid" ]; then
+      echo -e "${YELLOW}⚠️  IPFS CID already exists: $cid (this is OK)${NC}" >&2
+      echo "$cid|ALREADY_EXISTS"
+      return 0
+    fi
+  fi
   
   if [ -z "$cid" ]; then
     echo -e "${RED}❌ Failed to extract IPFS CID${NC}" >&2
-    echo "DEPLOY_FAILED"
+    echo "DEPLOY_FAILED|ERROR"
+    return 1
   else
-    echo "$cid"
+    echo -e "${GREEN}✅ Successfully deployed to IPFS: $cid${NC}" >&2
+    echo "$cid|SUCCESS"
+    return 0
   fi
 }
 
@@ -222,22 +248,90 @@ if [ "$BUILD_FAILED" = true ]; then
   exit 1
 fi
 
-# Step 2: Deploy and publish only successfully built packages
+# Step 2: Deploy all packages to IPFS
+echo ""
+echo -e "${BLUE}╔════════════════════════════════════════════════════╗${NC}"
+echo -e "${BLUE}║   PHASE 2: Deploying all packages to IPFS          ║${NC}"
+echo -e "${BLUE}╚════════════════════════════════════════════════════╝${NC}"
+echo ""
+
+declare -A DEPLOYED_PACKAGES
+declare -A PACKAGE_CIDS
+IPFS_DEPLOY_FAILED=false
+
+for package in "${BUILT_PACKAGES[@]}"; do
+  echo ""
+  echo -e "${BLUE}======================================${NC}"
+  echo -e "${BLUE}Deploying: $package${NC}"
+  echo -e "${BLUE}======================================${NC}"
+  
+  # Deploy and capture output
+  # Function outputs messages to stderr (>&2) and result line to stdout
+  temp_file=$(mktemp)
+  deploy_package "$package" > "$temp_file" 2>&1 || true
+  
+  # Extract the result line (format: CID|STATUS)
+  deploy_result=$(grep -E '\|(SUCCESS|ALREADY_EXISTS|ERROR)$' "$temp_file" | tail -1)
+  
+  # Display all output except the result line
+  grep -vE '\|(SUCCESS|ALREADY_EXISTS|ERROR)$' "$temp_file" || true
+  
+  # Clean up temp file
+  rm -f "$temp_file"
+  
+  # Parse result
+  cid=$(echo "$deploy_result" | cut -d'|' -f1)
+  deploy_status=$(echo "$deploy_result" | cut -d'|' -f2)
+  
+  if [ "$deploy_status" = "SUCCESS" ] || [ "$deploy_status" = "ALREADY_EXISTS" ]; then
+    DEPLOYED_PACKAGES+=(["$package"]="true")
+    PACKAGE_CIDS+=(["$package"]="$cid")
+    echo -e "${GREEN}✅ IPFS deployment successful for $package${NC}"
+    echo -e "  CID: $cid"
+    echo -e "  Status: $deploy_status"
+  else
+    echo -e "${RED}❌ IPFS deployment failed for $package${NC}"
+    echo "$package:" >> "$RESULTS_FILE"
+    echo "  Status: IPFS_DEPLOY_FAILED" >> "$RESULTS_FILE"
+    echo "  IPFS CID: $cid" >> "$RESULTS_FILE"
+    echo "" >> "$RESULTS_FILE"
+    IPFS_DEPLOY_FAILED=true
+  fi
+  echo ""
+done
+
+# Check if any IPFS deployments failed
+if [ "$IPFS_DEPLOY_FAILED" = true ]; then
+  echo ""
+  echo -e "${RED}╔════════════════════════════════════════════════════╗${NC}"
+  echo -e "${RED}║  ❌ Some packages failed to deploy to IPFS          ║${NC}"
+  echo -e "${RED}║  Aborting npm publishing                          ║${NC}"
+  echo -e "${RED}╚════════════════════════════════════════════════════╝${NC}"
+  echo ""
+  
+  # Show summary and exit
+  cat "$RESULTS_FILE"
+  exit 1
+fi
+
+# Step 3: Publish all successfully deployed packages to npm
 echo ""
 echo -e "${GREEN}╔════════════════════════════════════════════════════╗${NC}"
-echo -e "${GREEN}║  All packages built successfully                   ║${NC}"
-echo -e "${GREEN}║  Proceeding to deploy and publish...              ║${NC}"
+echo -e "${GREEN}║  All packages deployed to IPFS successfully      ║${NC}"
+echo -e "${GREEN}║  Proceeding to publish to npm...                  ║${NC}"
 echo -e "${GREEN}╚════════════════════════════════════════════════════╝${NC}"
 echo ""
 
 for package in "${BUILT_PACKAGES[@]}"; do
   echo ""
   echo -e "${GREEN}======================================${NC}"
-  echo -e "${GREEN}Processing: $package${NC}"
+  echo -e "${GREEN}Publishing: $package${NC}"
   echo -e "${GREEN}======================================${NC}"
   
-  # Deploy and capture CID
-  cid=$(deploy_package "$package")
+  cid="${PACKAGE_CIDS[$package]}"
+  
+  # Get full npm package name (including organization)
+  package_name=$(get_package_name "$package")
   
   # Publish and capture version and status
   version_status=$(publish_package "$package")
@@ -247,12 +341,14 @@ for package in "${BUILT_PACKAGES[@]}"; do
   # Record results
   echo "$package:" >> "$RESULTS_FILE"
   echo "  IPFS CID: $cid" >> "$RESULTS_FILE"
+  echo "  npm package: $package_name" >> "$RESULTS_FILE"
   echo "  npm version: $version" >> "$RESULTS_FILE"
   echo "  npm status: $status" >> "$RESULTS_FILE"
   echo "" >> "$RESULTS_FILE"
   
   echo -e "${GREEN}✅ Completed $package${NC}"
   echo -e "  IPFS CID: $cid"
+  echo -e "  npm package: $package_name"
   echo -e "  npm version: $version"
   echo -e "  npm status: $status"
   echo ""
@@ -282,6 +378,9 @@ while IFS= read -r line; do
     else
       echo -e "   ${BLUE}🔗 IPFS: $cid${NC}"
     fi
+  elif [[ $line =~ "npm package:" ]]; then
+    npm_package=$(echo "$line" | sed 's/.*npm package: //')
+    echo -e "   ${YELLOW}📦 npm package: $npm_package${NC}"
   elif [[ $line =~ "npm version:" ]]; then
     version=$(echo "$line" | sed 's/.*npm version: //')
     if [[ -z $version ]]; then
@@ -300,6 +399,8 @@ while IFS= read -r line; do
     fi
   elif [[ $line =~ "Status: BUILD_FAILED" ]]; then
     echo -e "   ${RED}❌ Build failed${NC}"
+  elif [[ $line =~ "Status: IPFS_DEPLOY_FAILED" ]]; then
+    echo -e "   ${RED}❌ IPFS deployment failed${NC}"
   fi
   
   # Add spacing between packages
@@ -320,11 +421,13 @@ echo "" >> "$RESULTS_FILE"
 declare -A packages_cid
 declare -A packages_version
 declare -A packages_status
+declare -A packages_npm_name
 declare -a failed_packages
 declare -a successful_packages
 
 package_name=""
 cid=""
+npm_package=""
 version=""
 status=""
 
@@ -334,6 +437,8 @@ while IFS= read -r line; do
   elif [[ $line =~ "IPFS CID:" ]]; then
     # Extract CID from the line, handling various formats
     cid=$(echo "$line" | sed 's/.*IPFS CID: //' | tr -d '\012\015')
+  elif [[ $line =~ "npm package:" ]]; then
+    npm_package=$(echo "$line" | sed 's/.*npm package: //' | tr -d '\012\015')
   elif [[ $line =~ "npm version:" ]]; then
     version=$(echo "$line" | sed 's/.*npm version: //' | tr -d '\012\015')
   elif [[ $line =~ "npm status:" ]]; then
@@ -341,10 +446,11 @@ while IFS= read -r line; do
     
     # Process the data if we have a package name
     if [[ -n "$package_name" ]]; then
-      # Extract actual CID using grep on the file content
-      actual_cid=$(grep -A 200 "$package_name:" "$RESULTS_FILE" | grep -oP 'Deployed lit-action.js to IPFS: \KQm[a-zA-Z0-9]+' | head -1)
+      # Use the CID that was already extracted from "IPFS CID:" line
+      actual_cid="$cid"
       
-      if [[ -z "$actual_cid" ]]; then
+      # Check if CID is valid (starts with Qm and has valid length) or if it's a failure indicator
+      if [[ -z "$actual_cid" ]] || [[ "$actual_cid" == "DEPLOY_FAILED" ]] || [[ ! "$actual_cid" =~ ^Qm[a-zA-Z0-9]{44}$ ]]; then
         actual_cid="DEPLOY_FAILED"
         failed_packages+=("$package_name")
       else
@@ -352,12 +458,14 @@ while IFS= read -r line; do
       fi
       
       packages_cid["$package_name"]="$actual_cid"
+      packages_npm_name["$package_name"]="$npm_package"
       packages_version["$package_name"]="$version"
       packages_status["$package_name"]="$status"
       
       # Reset for next package
       package_name=""
       cid=""
+      npm_package=""
       version=""
       status=""
     fi
@@ -373,6 +481,7 @@ if [[ ${#successful_packages[@]} -gt 0 ]]; then
   for package in "${successful_packages[@]}"; do
     echo "${count}. **${package}**" >> "$RESULTS_FILE"
     echo "   - IPFS CID: \`${packages_cid[$package]}\`" >> "$RESULTS_FILE"
+    echo "   - npm package: \`${packages_npm_name[$package]}\`" >> "$RESULTS_FILE"
     echo "   - npm version: \`${packages_version[$package]}\`" >> "$RESULTS_FILE"
     echo "   - Status: ${packages_status[$package]}" >> "$RESULTS_FILE"
     echo "" >> "$RESULTS_FILE"
@@ -389,6 +498,9 @@ if [[ ${#failed_packages[@]} -gt 0 ]]; then
   for package in "${failed_packages[@]}"; do
     echo "${count}. **${package}**" >> "$RESULTS_FILE"
     echo "   - Issue: Failed to extract IPFS CID" >> "$RESULTS_FILE"
+    if [[ -n "${packages_npm_name[$package]}" ]]; then
+      echo "   - npm package: \`${packages_npm_name[$package]}\`" >> "$RESULTS_FILE"
+    fi
     echo "   - npm version: \`${packages_version[$package]}\` (${packages_status[$package]})" >> "$RESULTS_FILE"
     echo "   - Status: DEPLOY_FAILED" >> "$RESULTS_FILE"
     echo "" >> "$RESULTS_FILE"
@@ -412,6 +524,7 @@ if [[ ${#successful_packages[@]} -gt 0 ]]; then
   for package in "${successful_packages[@]}"; do
     echo -e "${GREEN}${count}.${NC} ${package}"
     echo -e "   ${BLUE}IPFS CID:${NC} ${packages_cid[$package]}"
+    echo -e "   ${YELLOW}npm package:${NC} ${packages_npm_name[$package]}"
     echo -e "   ${YELLOW}npm version:${NC} ${packages_version[$package]}"
     echo -e "   ${GREEN}Status:${NC} ${packages_status[$package]}"
     echo ""
@@ -428,6 +541,9 @@ if [[ ${#failed_packages[@]} -gt 0 ]]; then
   for package in "${failed_packages[@]}"; do
     echo -e "${RED}${count}.${NC} ${package}"
     echo -e "   ${RED}Issue:${NC} Failed to extract IPFS CID"
+    if [[ -n "${packages_npm_name[$package]}" ]]; then
+      echo -e "   ${YELLOW}npm package:${NC} ${packages_npm_name[$package]}"
+    fi
     echo -e "   ${YELLOW}npm version:${NC} ${packages_version[$package]} (${packages_status[$package]})"
     echo -e "   ${RED}Status:${NC} DEPLOY_FAILED"
     echo ""

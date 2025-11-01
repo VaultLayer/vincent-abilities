@@ -7,7 +7,7 @@ import {
   supportedPoliciesForAbility,
 } from '@lit-protocol/vincent-ability-sdk';
 
-import { fetchToolsAndPolicies } from './helpers/fetchToolsAndPolicies';
+import { fetchAbilitiesAndPolicies } from './helpers/fetchToolsAndPolicies';
 import {
   executeFailSchema,
   executeSuccessSchema,
@@ -64,8 +64,8 @@ export const vincentAbility = createVincentAbility({
       // Get PKP token ID from delegation context
       const pkpTokenId = delegation.delegatorPkpInfo.tokenId;
 
-      // Fetch tools and policies
-      const toolsAndPolicies = await fetchToolsAndPolicies(pkpTokenId, appId);
+      // Fetch abilities and policies
+      const toolsAndPolicies = await fetchAbilitiesAndPolicies(pkpTokenId, appId);
 
       console.log('[@vaultlayer/vincent-ability-app-metadata/execute] Fetch successful');
 

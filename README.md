@@ -73,11 +73,17 @@ Project-level Nx targets you may find useful (run via pnpm nx ...):
 
 ### Abilities
 
-| Package                                     | Path                             | Purpose                                                                                                                                                        |
-| ------------------------------------------- | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| @vaultlayer/vincent-ability-native-send     | packages/ability-native-send     | An example Vincent Ability that sends native tokens to a user. Demonstrates Ability authoring, bundling, and deployment.                                       |
-| @vaultlayer/vincent-ability-btc-psbt-signer | packages/ability-btc-psbt-signer | Signs Bitcoin PSBTs using PKP-derived Bitcoin keys. Supports testnet/mainnet, CLTV timelocks, and transaction broadcasting. Works with btc-outputs policy.     |
-| @vaultlayer/vincent-ability-call-contract   | packages/ability-call-contract   | Generic smart contract interaction ability for EVM chains. Supports flexible parameter encoding, optional gas sponsorship (EIP-7702), and call data appending. |
+| Package                                     | Path                             | Purpose                                                                                                                                                            |
+| ------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| @vaultlayer/vincent-ability-native-send     | packages/ability-native-send     | An example Vincent Ability that sends native tokens to a user. Demonstrates Ability authoring, bundling, and deployment.                                           |
+| @vaultlayer/vincent-ability-btc-psbt-signer | packages/ability-btc-psbt-signer | Signs Bitcoin PSBTs using PKP-derived Bitcoin keys. Supports testnet/mainnet, CLTV timelocks, and transaction broadcasting. Works with btc-outputs policy.         |
+| @vaultlayer/vincent-ability-call-contract   | packages/ability-call-contract   | Generic smart contract interaction ability for EVM chains. Supports flexible parameter encoding, optional gas sponsorship (EIP-7702), and call data appending.     |
+| @vaultlayer/vincent-ability-across-bridge   | packages/ability-across-bridge   | Bridges USDC across Base, Arbitrum, and Ethereum using Across Protocol. Supports separate approve/bridge actions, gas sponsorship, and API-driven fee estimation.  |
+| @vaultlayer/vincent-ability-btc-bridge      | packages/ability-btc-bridge      | Bridges wrapped Bitcoin (cbBTC/WBTC) to native Bitcoin using THORChain. Supports Base and Ethereum, PKP address derivation, and works with btc-bridge policy.      |
+| @vaultlayer/vincent-ability-coredao-bridge  | packages/ability-coredao-bridge  | Bridges USDC between CoreDAO and other EVM chains (Base, Arbitrum, Ethereum) using LayerZero v1. Supports bidirectional bridging with automatic approval handling. |
+| @vaultlayer/vincent-ability-molten-swap     | packages/ability-molten-swap     | Swaps tokens on CoreDAO chain using Molten protocol. Supports flexible token pairs, automatic approval, and gas sponsorship.                                       |
+| @vaultlayer/vincent-ability-unpermit-app    | packages/ability-unpermit-app    | Unpermits an app version for a delegatee by calling Lit contracts directly. Enables permission revocation for specific app versions.                               |
+| @vaultlayer/vincent-ability-app-metadata    | packages/ability-app-metadata    | Fetches tools and policies associated with a specific application ID. Enables app discovery and capability retrieval for registered applications.                  |
 
 ### Policies
 
@@ -86,6 +92,7 @@ Project-level Nx targets you may find useful (run via pnpm nx ...):
 | @vaultlayer/vincent-send-policy-counter            | packages/policy-counter                 | An example Vincent Policy that counts the number of times an Ability is executed. Demonstrates Policy authoring, bundling, and deployment.                        |
 | @vaultlayer/vincent-policy-btc-outputs             | packages/policy-btc-outputs             | Validates Bitcoin transaction outputs against a whitelist of allowed addresses. Automatically includes PKP's derived Bitcoin address. Works with btc-psbt-signer. |
 | @vaultlayer/vincent-policy-call-contract-whitelist | packages/policy-call-contract-whitelist | Provides granular access control for smart contract interactions. Enforces whitelists for contracts, functions, chains, value limits, and call data prefixes.     |
+| @vaultlayer/vincent-policy-app-metadata            | packages/policy-app-metadata            | Stores application metadata (vlMetadata) alongside Vincent Abilities. Enables rich metadata storage for application discovery and management.                     |
 
 ### Testing
 
@@ -242,6 +249,118 @@ The Send Policy Counter (`@vaultlayer/vincent-send-policy-counter`) tracks and l
 - API rate limiting for blockchain operations
 
 See the [full documentation](packages/policy-counter/README.md) for detailed configuration examples.
+
+### Across Bridge Ability
+
+The Across Bridge Ability (`@vaultlayer/vincent-ability-across-bridge`) enables Vincent Apps to bridge USDC across Base, Arbitrum, and Ethereum using the Across Protocol.
+
+**Key Features:**
+
+- Bridges USDC between Base, Arbitrum, and Ethereum
+- Separate approve and bridge actions for flexible workflows
+- API-driven fee estimation via Across Protocol
+- Optional EIP-7702 gas sponsorship on all supported chains
+- Automatic allowance management
+
+**Supported Routes:**
+
+- Base ↔ Arbitrum
+- Base ↔ Ethereum
+- Arbitrum ↔ Ethereum
+
+See the [full documentation](packages/ability-across-bridge/README.md) for detailed usage examples.
+
+### Bitcoin Bridge Ability
+
+The Bitcoin Bridge Ability (`@vaultlayer/vincent-ability-btc-bridge`) enables Vincent Apps to bridge wrapped Bitcoin (cbBTC/WBTC) to native Bitcoin using THORChain.
+
+**Key Features:**
+
+- Bridges cbBTC (Base) and WBTC (Ethereum) to native Bitcoin
+- Automatic PKP Bitcoin address derivation
+- THORChain integration for cross-chain swaps
+- Minimum bridge amount: 0.001 BTC
+- Works with Bitcoin Bridge Policy for address whitelisting
+
+**Supported Routes:**
+
+- Base → Bitcoin (cbBTC)
+- Ethereum → Bitcoin (WBTC)
+
+See the [full documentation](packages/ability-btc-bridge/README.md) for detailed usage examples.
+
+### CoreDAO Bridge Ability
+
+The CoreDAO Bridge Ability (`@vaultlayer/vincent-ability-coredao-bridge`) enables Vincent Apps to bridge USDC between CoreDAO and other EVM chains using LayerZero v1.
+
+**Key Features:**
+
+- LayerZero v1 integration for secure bridging
+- Bidirectional bridging to/from CoreDAO
+- Supports Base, Arbitrum, Ethereum, and CoreDAO
+- Automatic inline approval handling
+- On-chain LayerZero v1 fee estimation
+
+**Supported Routes:**
+
+- Base ↔ CoreDAO
+- Arbitrum ↔ CoreDAO
+- CoreDAO → Ethereum
+
+See the [full documentation](packages/ability-coredao-bridge/README.md) for detailed usage examples.
+
+### Molten Swap Ability
+
+The Molten Swap Ability (`@vaultlayer/vincent-ability-molten-swap`) enables Vincent Apps to swap tokens on CoreDAO chain using the Molten protocol.
+
+**Key Features:**
+
+- Token swaps on CoreDAO chain via Molten DEX
+- Flexible token pair support
+- Automatic approval handling
+- Optional gas sponsorship (not on CoreDAO)
+- Quote validation and slippage protection
+
+See the [full documentation](packages/ability-molten-swap/README.md) for detailed usage examples.
+
+### Unpermit App Ability
+
+The Unpermit App Ability (`@vaultlayer/vincent-ability-unpermit-app`) enables Vincent Apps to revoke permissions for a specific app version.
+
+**Key Features:**
+
+- Calls Lit Vincent Tool Policies contract directly
+- Validates app ID and app version before execution
+- Uses PKP-derived keys for transaction signing
+- Simple permission revocation workflow
+
+See the [full documentation](packages/ability-unpermit-app/README.md) for detailed usage examples.
+
+### App Metadata Ability
+
+The App Metadata Ability (`@vaultlayer/vincent-ability-app-metadata`) enables Vincent Apps to fetch tools and policies associated with a specific application ID.
+
+**Key Features:**
+
+- App discovery and capability retrieval
+- Fetches all available tools for an application
+- Retrieves associated policies for an application
+- Works with App Metadata Policy for access control
+
+See the [full documentation](packages/ability-app-metadata/README.md) for detailed usage examples.
+
+### App Metadata Policy
+
+The App Metadata Policy (`@vaultlayer/vincent-policy-app-metadata`) provides a mechanism to store application metadata alongside Vincent Abilities.
+
+**Key Features:**
+
+- Stores custom JSON metadata via `vlMetadata` parameter
+- Validates app IDs as positive integers
+- Flexible metadata format for application-specific information
+- Works with App Metadata Ability for metadata retrieval
+
+See the [full documentation](packages/policy-app-metadata/README.md) for detailed configuration examples.
 
 ## Bootstrap flow
 

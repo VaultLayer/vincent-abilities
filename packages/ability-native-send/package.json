@@ -1,6 +1,6 @@
 {
   "name": "@vaultlayer/vincent-ability-native-send",
-  "version": "0.0.6",
+  "version": "0.0.10",
   "description": "A Vincent ability that sends native tokens to a user.",
   "main": "./dist/src/index.js",
   "module": "./dist/src/index.js",

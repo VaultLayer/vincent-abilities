@@ -1,1 +1,5 @@
-export { fetchToolsAndPolicies, type DecodedToolWithPolicies } from './fetchToolsAndPolicies';
+export {
+  fetchAbilitiesAndPolicies,
+  fetchToolsAndPolicies,
+  type DecodedAbilityWithPolicies,
+} from './fetchToolsAndPolicies';

@@ -58,7 +58,11 @@
       "ability-call-contract",
       "policy-call-contract-whitelist",
       "ability-app-metadata",
-      "policy-app-metadata"
+      "policy-app-metadata",
+      "ability-across-bridge",
+      "ability-coredao-bridge",
+      "ability-btc-bridge",
+      "ability-unpermit-app"
     ],
     "projectsRelationship": "independent",
     "releaseTagPattern": "vincent/{projectName}/{version}",

@@ -1,0 +1,58 @@
+{
+  "name": "ability-across-bridge",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "src",
+  "projectType": "library",
+  "targets": {
+    "clean": {},
+    "action:build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["ability-sdk:build"],
+      "options": {
+        "commands": ["pnpm node ./esbuild.config.js"],
+        "cwd": "packages/ability-across-bridge",
+        "parallel": false
+      }
+    },
+    "action:deploy": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["action:build"],
+      "options": {
+        "commands": ["node scripts/deploy-lit-action.js"],
+        "cwd": "packages/ability-across-bridge"
+      }
+    },
+    "action:only:deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["node scripts/deploy-lit-action.js"],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "dependsOn": ["action:build"],
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "packages/ability-across-bridge/dist",
+        "main": "packages/ability-across-bridge/src/index.ts",
+        "tsConfig": "packages/ability-across-bridge/tsconfig.lib.json",
+        "assets": [
+          "packages/ability-across-bridge/*.md",
+          {
+            "glob": "**/*",
+            "input": "packages/ability-across-bridge/src/generated",
+            "output": "src/generated"
+          }
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/ability-across-bridge/jest.config.js"
+      }
+    }
+  }
+}

@@ -17,9 +17,6 @@
   "include": ["src/**/*.ts", "src/generated/vincent-ability-metadata.json"],
   "references": [
     {
-      "path": "../../libs/ability-sdk/tsconfig.lib.json"
-    },
-    {
       "path": "../policy-btc-outputs/tsconfig.lib.json"
     }
   ],

@@ -1,6 +1,6 @@
 {
   "name": "@vaultlayer/vincent-ability-btc-psbt-signer",
-  "version": "0.1.5",
+  "version": "0.1.9",
   "publishConfig": {
     "access": "public"
   },

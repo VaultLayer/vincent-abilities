@@ -10,6 +10,15 @@
     },
     {
       "path": "./packages/test-e2e"
+    },
+    {
+      "path": "./packages/ability-coredao-bridge"
+    },
+    {
+      "path": "./packages/ability-across-bridge"
+    },
+    {
+      "path": "./packages/ability-btc-bridge"
     }
   ]
 }
