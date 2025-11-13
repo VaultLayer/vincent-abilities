@@ -1,0 +1,26 @@
+{
+  "jsonSchema": {
+    "type": "object",
+    "properties": {
+      "allowedRecipients": {
+        "type": "array",
+        "title": "Allowed EVM Recipient Addresses",
+        "description": "Array of allowed EVM recipient addresses. Leave empty to only allow transfers to the PKP's derived Ethereum address.",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "required": ["allowedRecipients"]
+  },
+  "uiSchema": {
+    "allowedRecipients": {
+      "ui:options": {
+        "orderable": false
+      },
+      "items": {
+        "ui:placeholder": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6"
+      }
+    }
+  }
+}

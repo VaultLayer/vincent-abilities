@@ -2,12 +2,13 @@
 
 ## Overview
 
-The Bitcoin Bridge Ability enables Vincent Apps to bridge wrapped Bitcoin (cbBTC on Base or WBTC on Ethereum) to native Bitcoin using THORChain. This ability provides secure cross-chain Bitcoin transfers with automatic approval handling and fee estimation.
+The Bitcoin Bridge Ability enables Vincent Apps to bridge wrapped Bitcoin (cbBTC on Base or wBTC on Ethereum) or USDC (Base or Ethereum) to native Bitcoin using THORChain. This ability provides secure cross-chain Bitcoin transfers with automatic approval handling and fee estimation.
 
 ## Key Features
 
 - **THORChain Integration**: Uses THORChain's router contracts for Bitcoin bridging
-- **Wrapped Bitcoin Support**: Supports cbBTC on Base and WBTC on Ethereum
+- **Wrapped Bitcoin Support**: Supports cbBTC on Base and wBTC on Ethereum
+- **USDC Support**: Supports USDC on Base and Ethereum
 - **Native Bitcoin Output**: Always bridges to PKP-derived Bitcoin address
 - **PKP Address Derivation**: Automatically derives Bitcoin address from PKP public key
 - **Automatic Approval**: Separates approval and bridge operations for flexible workflows
@@ -15,8 +16,8 @@ The Bitcoin Bridge Ability enables Vincent Apps to bridge wrapped Bitcoin (cbBTC
 
 ## Supported Routes
 
-- **Base → Bitcoin**: Bridge cbBTC to native Bitcoin
-- **Ethereum → Bitcoin**: Bridge WBTC to native Bitcoin
+- **Base → Bitcoin**: Bridge cbBTC or USDC to native Bitcoin
+- **Ethereum → Bitcoin**: Bridge wBTC or USDC to native Bitcoin
 
 ## Installation
 
@@ -39,18 +40,32 @@ const result = await executeAbility({
   params: {
     action: 'bridge',
     sourceChain: 'base',
+    sourceAsset: 'cbBTC',
     amount: '0.1', // 0.1 cbBTC
     btcNetwork: 'livenet', // or 'testnet'
     rpcUrl: 'https://mainnet.base.org',
   },
 });
 
-// Approve wrapped BTC for bridging (separate action)
+// Bridge USDC from Base to native Bitcoin
+const usdcResult = await executeAbility({
+  ability: bundledVincentAbility,
+  params: {
+    action: 'bridge',
+    sourceChain: 'base',
+    sourceAsset: 'USDC',
+    amount: '500', // 500 USDC
+    btcNetwork: 'livenet',
+  },
+});
+
+// Approve source asset for bridging (separate action)
 const approvalResult = await executeAbility({
   ability: bundledVincentAbility,
   params: {
     action: 'approve',
     sourceChain: 'base',
+    sourceAsset: 'cbBTC',
     amount: '1.0',
     btcNetwork: 'livenet',
   },
@@ -72,12 +87,23 @@ const approvalResult = await executeAbility({
 - **Type**: `'base' | 'ethereum'`
 - **Description**: Source chain for the bridge operation
 
+#### sourceAsset
+
+- **Type**: `'USDC' | 'cbBTC' | 'wBTC'`
+- **Description**: Source asset type to bridge
+  - `'USDC'`: USDC (supports Base and Ethereum)
+  - `'cbBTC'`: cbBTC (Base only)
+  - `'wBTC'`: wBTC (Ethereum only)
+- **Default**: `'cbBTC'`
+
 #### amount
 
 - **Type**: `string`
-- **Description**: Amount of wrapped BTC to bridge as a decimal string
-- **Example**: `'0.1'` (0.1 BTC)
-- **Minimum**: 0.001 BTC
+- **Description**: Amount of source asset to bridge as a decimal string
+- **Example**: `'0.1'` (0.1 BTC for wrapped BTC), `'500'` (500 USDC)
+- **Minimum**:
+  - 0.001 BTC for cbBTC/wBTC
+  - 5 USDC for USDC
 
 #### btcNetwork
 
@@ -113,30 +139,37 @@ const approvalResult = await executeAbility({
 ### Wrapped Bitcoin Token Addresses
 
 - **Base cbBTC**: `0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf`
-- **Ethereum WBTC**: `0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599`
+- **Ethereum wBTC**: `0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599`
 
 Both tokens have 8 decimals (standard Bitcoin decimals).
+
+### USDC Token Addresses
+
+- **Base USDC**: `0x833589fCD6EDB6E08F4C7C32D4F71B54BDA02913`
+- **Ethereum USDC**: `0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48`
+
+USDC has 6 decimals.
 
 ## How It Works
 
 1. **Precheck Phase**:
 
-   - Validates source chain is supported
+   - Validates source chain and asset combination is supported
    - Checks native token balance (if not using gas sponsorship)
-   - Verifies wrapped BTC balance meets required amount (minimum 0.001 BTC)
+   - Verifies source asset balance meets required amount (minimum 0.001 BTC for wrapped BTC, 5 USDC for USDC)
    - Validates Bitcoin destination address format
    - Queries THORChain for inbound address and quote
-   - Checks wrapped BTC allowance for THORChain router
+   - Checks source asset allowance for THORChain router
    - Derives PKP Bitcoin address if destination not provided
 
 2. **Execute Phase (approve action)**:
 
-   - Checks current wrapped BTC allowance
+   - Checks current source asset allowance
    - Sends approval transaction if needed (approves MaxUint256)
    - Returns approval transaction hash
 
 3. **Execute Phase (bridge action)**:
-   - Ensures wrapped BTC approval (fails if insufficient allowance)
+   - Ensures source asset approval (fails if insufficient allowance)
    - Fetches THORChain inbound address and quote
    - Validates quote tolerance (within 50 bps of expected)
    - Builds THORChain memo with destination address
@@ -193,9 +226,9 @@ This ability works with the Bitcoin Bridge Policy:
 
 The ability will fail gracefully with descriptive error messages for:
 
-- Unsupported source chains
-- Insufficient wrapped BTC balance
-- Amount below minimum (0.001 BTC)
+- Unsupported source chain and asset combinations
+- Insufficient source asset balance
+- Amount below minimum (0.001 BTC for wrapped BTC, 5 USDC for USDC)
 - Invalid Bitcoin address format
 - Insufficient allowance (when bridging without approval)
 - Insufficient gas balance (when not using gas sponsorship)
@@ -204,30 +237,46 @@ The ability will fail gracefully with descriptive error messages for:
 
 ## Examples
 
-### Approve Wrapped BTC for Bridging
+### Approve Source Asset for Bridging
 
 ```typescript
+// Approve cbBTC
 const result = await executeAbility({
   ability: bundledVincentAbility,
   params: {
     action: 'approve',
     sourceChain: 'base',
+    sourceAsset: 'cbBTC',
     amount: '1.0',
     btcNetwork: 'livenet',
   },
 });
 
 console.log('Approval tx hash:', result.approvalTxHash);
+
+// Approve USDC
+const usdcApproval = await executeAbility({
+  ability: bundledVincentAbility,
+  params: {
+    action: 'approve',
+    sourceChain: 'base',
+    sourceAsset: 'USDC',
+    amount: '5000',
+    btcNetwork: 'livenet',
+  },
+});
 ```
 
 ### Bridge to PKP Bitcoin Address
 
 ```typescript
+// Bridge cbBTC
 const result = await executeAbility({
   ability: bundledVincentAbility,
   params: {
     action: 'bridge',
     sourceChain: 'base',
+    sourceAsset: 'cbBTC',
     amount: '0.1',
     btcNetwork: 'livenet',
   },
@@ -235,6 +284,30 @@ const result = await executeAbility({
 
 console.log('Bridge tx hash:', result.bridgeTxHash);
 console.log('Estimated output BTC:', result.estimatedOutputBtc);
+
+// Bridge USDC from Base
+const usdcResult = await executeAbility({
+  ability: bundledVincentAbility,
+  params: {
+    action: 'bridge',
+    sourceChain: 'base',
+    sourceAsset: 'USDC',
+    amount: '500',
+    btcNetwork: 'livenet',
+  },
+});
+
+// Bridge USDC from Ethereum
+const ethUsdcResult = await executeAbility({
+  ability: bundledVincentAbility,
+  params: {
+    action: 'bridge',
+    sourceChain: 'ethereum',
+    sourceAsset: 'USDC',
+    amount: '500',
+    btcNetwork: 'livenet',
+  },
+});
 ```
 
 ### Bridge with Gas Sponsorship
@@ -245,6 +318,7 @@ const result = await executeAbility({
   params: {
     action: 'bridge',
     sourceChain: 'base',
+    sourceAsset: 'cbBTC',
     amount: '0.1',
     btcNetwork: 'livenet',
     alchemyGasSponsor: true,
@@ -285,15 +359,19 @@ console.log('User operation hash:', result.bridgeTxUserOperationHash);
 
 ## Use Cases
 
-- Convert wrapped Bitcoin to native Bitcoin
+- Convert wrapped Bitcoin (cbBTC/wBTC) to native Bitcoin
+- Convert USDC to native Bitcoin on Base or Ethereum
 - Withdraw Bitcoin from DeFi protocols
 - Cross-chain Bitcoin management
 - Bitcoin custody and self-custody workflows
 - Multi-chain Bitcoin portfolio management
+- USDC to Bitcoin conversions for broader accessibility
 
 ## Security Considerations
 
-- **Minimum Amount**: 0.001 BTC minimum prevents dust attacks
+- **Minimum Amount**:
+  - 0.001 BTC minimum for wrapped BTC (cbBTC/wBTC) prevents dust attacks
+  - 5 USDC minimum for USDC bridges
 - **Address Validation**: Validates Bitcoin address format before bridging
 - **Policy Enforcement**: Use Bitcoin Bridge Policy to restrict destination addresses
 - **Quote Validation**: Validates THORChain quotes are within tolerance

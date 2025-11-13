@@ -19,6 +19,15 @@
     },
     {
       "path": "./packages/ability-btc-bridge"
+    },
+    {
+      "path": "./packages/ability-unpermit-app"
+    },
+    {
+      "path": "./packages/ability-evm-send"
+    },
+    {
+      "path": "./packages/ability-aave"
     }
   ]
 }

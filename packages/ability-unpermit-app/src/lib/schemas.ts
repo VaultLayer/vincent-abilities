@@ -1,18 +1,15 @@
 import { z } from 'zod';
 
 export const KNOWN_ERRORS = {
-  INVALID_APP_ID: 'INVALID_APP_ID',
-  INVALID_APP_VERSION: 'INVALID_APP_VERSION',
   MISSING_PKP_TOKEN_ID: 'MISSING_PKP_TOKEN_ID',
+  APP_NOT_DELEGATED_TO_DELEGATEE: 'APP_NOT_DELEGATED_TO_DELEGATEE',
 } as const;
 
 /**
  * Tool parameters schema - defines the input parameters for the unpermit app ability
+ * No parameters needed - appId and appVersion are derived from the delegatee's app
  */
-export const abilityParamsSchema = z.object({
-  appId: z.number().int().positive('App ID must be a positive integer'),
-  appVersion: z.number().int().positive('App version must be a positive integer'),
-});
+export const abilityParamsSchema = z.object({});
 
 /**
  * Precheck success result schema
@@ -28,9 +25,8 @@ export const precheckSuccessSchema = z.object({
  */
 export const precheckFailSchema = z.object({
   reason: z.union([
-    z.literal(KNOWN_ERRORS['INVALID_APP_ID']),
-    z.literal(KNOWN_ERRORS['INVALID_APP_VERSION']),
     z.literal(KNOWN_ERRORS['MISSING_PKP_TOKEN_ID']),
+    z.literal(KNOWN_ERRORS['APP_NOT_DELEGATED_TO_DELEGATEE']),
   ]),
   error: z.string(),
 });

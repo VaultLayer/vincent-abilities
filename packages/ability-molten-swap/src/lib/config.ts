@@ -30,27 +30,27 @@ export const moltenSwapConfig: MoltenSwapConfig = {
   nonfungiblePositionManager: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
   tokens: {
     // Address-based access (for programmatic use)
-    '0x900101d06a7426441ae63e9ab3b9b0f63be145f1': {
+    '0x900101d06A7426441Ae63e9AB3B9b0F63Be145F1': {
       name: 'USDT',
-      address: '0x900101d06a7426441ae63e9ab3b9b0f63be145f1',
+      address: '0x900101d06A7426441Ae63e9AB3B9b0F63Be145F1',
       symbol: 'USDT',
       decimals: 6,
     },
-    '0xa4151b2b3e269645181dccf2d426ce75fcbdeca9': {
+    '0xa4151B2B3e269645181dCcF2D426cE75fcbDeca9': {
       name: 'USDC',
-      address: '0xa4151b2b3e269645181dccf2d426ce75fcbdeca9',
+      address: '0xa4151B2B3e269645181dCcF2D426cE75fcbDeca9',
       symbol: 'USDC',
       decimals: 6,
     },
-    '0x5832f53d147b3d6cd4578b9cbd62425c7ea9d0bd': {
+    '0x5832f53d147b3d6Cd4578B9CBD62425C7ea9d0Bd': {
       name: 'Wrapped BTC',
-      address: '0x5832f53d147b3d6cd4578b9cbd62425c7ea9d0bd',
+      address: '0x5832f53d147b3d6Cd4578B9CBD62425C7ea9d0Bd',
       symbol: 'wBTC',
       decimals: 8,
     },
-    '0x191e94fa59739e188dce837f7f6978d84727ad01': {
+    '0x191E94fa59739e188dcE837F7f6978d84727AD01': {
       name: 'Wrapped CORE',
-      address: '0x191e94fa59739e188dce837f7f6978d84727ad01',
+      address: '0x191E94fa59739e188dcE837F7f6978d84727AD01',
       symbol: 'wCORE',
       decimals: 18,
     },
@@ -69,25 +69,25 @@ export const moltenSwapConfig: MoltenSwapConfig = {
     // Symbol-based access (for convenience)
     USDT: {
       name: 'USDT',
-      address: '0x900101d06a7426441ae63e9ab3b9b0f63be145f1',
+      address: '0x900101d06A7426441Ae63e9AB3B9b0F63Be145F1',
       symbol: 'USDT',
       decimals: 6,
     },
     USDC: {
       name: 'USDC',
-      address: '0xa4151b2b3e269645181dccf2d426ce75fcbdeca9',
+      address: '0xa4151B2B3e269645181dCcF2D426cE75fcbDeca9',
       symbol: 'USDC',
       decimals: 6,
     },
     wBTC: {
       name: 'Wrapped BTC',
-      address: '0x5832f53d147b3d6cd4578b9cbd62425c7ea9d0bd',
+      address: '0x5832f53d147b3d6Cd4578B9CBD62425C7ea9d0Bd',
       symbol: 'wBTC',
       decimals: 8,
     },
     wCORE: {
       name: 'Wrapped CORE',
-      address: '0x191e94fa59739e188dce837f7f6978d84727ad01',
+      address: '0x191E94fa59739e188dcE837F7f6978d84727AD01',
       symbol: 'wCORE',
       decimals: 18,
     },

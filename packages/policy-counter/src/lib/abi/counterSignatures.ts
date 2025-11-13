@@ -1,5 +1,5 @@
 export const counterSignatures = {
-  address: '0x91670f6ce98353815278b4b21f11222dec14fefe',
+  address: '0x91670F6cE98353815278b4b21F11222deC14fEfE',
   methods: {
     counterByAddress: {
       type: 'function',

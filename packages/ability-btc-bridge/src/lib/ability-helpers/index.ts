@@ -3,6 +3,7 @@ export { getErc20Allowance } from './get-erc20-allowance';
 export { sendErc20ApprovalTx } from './send-erc20-approval-tx';
 export { getRpcUrl } from './get-rpc-url';
 export { getWrappedBtcToken } from './get-wrapped-btc-token';
+export { getSourceToken, type SourceAssetType, type SourceTokenInfo } from './get-source-token';
 export { fetchThorInbound } from './fetch-thor-inbound';
 export { getThorQuote } from './get-thor-quote';
 export { ldTo1e8 } from './convert-to-1e8';

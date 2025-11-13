@@ -232,8 +232,9 @@ export const vincentPolicy = createVincentPolicy({
       const txOutputs = psbt.txOutputs;
 
       // First check if this is a staking transaction (only if stakingLockTime is provided)
+      const hasStakingLockTime = typeof stakingLockTime === 'number';
       let stakingValidation = { isValid: false };
-      if (stakingLockTime !== undefined) {
+      if (hasStakingLockTime) {
         stakingValidation = isValidStakingTransaction(
           psbt,
           btcNetworkObj,
@@ -320,8 +321,9 @@ export const vincentPolicy = createVincentPolicy({
       const txOutputs = psbt.txOutputs;
 
       // First check if this is a staking transaction (only if stakingLockTime is provided)
+      const hasStakingLockTime = typeof stakingLockTime === 'number';
       let stakingValidation = { isValid: false };
-      if (stakingLockTime !== undefined) {
+      if (hasStakingLockTime) {
         stakingValidation = isValidStakingTransaction(
           psbt,
           btcNetworkObj,

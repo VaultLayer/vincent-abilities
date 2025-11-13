@@ -62,7 +62,10 @@
       "ability-across-bridge",
       "ability-coredao-bridge",
       "ability-btc-bridge",
-      "ability-unpermit-app"
+      "ability-unpermit-app",
+      "ability-evm-send",
+      "policy-evm-recipients",
+      "ability-aave"
     ],
     "projectsRelationship": "independent",
     "releaseTagPattern": "vincent/{projectName}/{version}",

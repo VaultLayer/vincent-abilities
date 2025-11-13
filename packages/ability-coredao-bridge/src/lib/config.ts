@@ -12,7 +12,7 @@ export const LZ_V1_BRIDGE_ADDRESSES = {
     originalTokenBridge: '0x84FB2086Fed7b3c9b3a4Bc559f60fFaA91507879' as const,
   },
   arbitrum: {
-    originalTokenBridge: '0x29d096cd18c0da7500295f082da73316d704031a' as const,
+    originalTokenBridge: '0x29d096cD18C0dA7500295f082da73316d704031A' as const,
   },
   coreDao: {
     wrappedTokenBridge: '0xA4218e1F39DA4AaDaC971066458Db56e901bcbdE' as const,
@@ -32,7 +32,7 @@ export const USDC_TOKEN_ADDRESSES = {
   arbitrum: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831' as const,
   base: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' as const,
   ethereum: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48' as const,
-  coreDao: '0xa4151b2b3e269645181dccf2d426ce75fcbdeca9' as const,
+  coreDao: '0xa4151B2B3e269645181dCcF2D426cE75fcbDeca9' as const,
 } as const;
 
 // USDC decimals (standard is 6)

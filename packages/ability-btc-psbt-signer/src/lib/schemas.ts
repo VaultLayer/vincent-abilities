@@ -9,8 +9,9 @@ export const abilityParamsSchema = z.object({
     .default(false)
     .describe('Whether this is a redeem transaction for staked Bitcoin (CLTV timelock)'),
   stakingLockTime: z
-    .number()
+    .union([z.number(), z.null()])
     .optional()
+    .default(null)
     .describe('The lockTime for staking transactions (Unix timestamp)'),
 });
 

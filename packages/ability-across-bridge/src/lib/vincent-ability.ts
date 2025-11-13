@@ -9,7 +9,8 @@ import type {
   CheckNativeTokenBalanceResultSuccess,
   CheckErc20AllowanceResultFailure,
   CheckErc20BalanceResultFailure,
-  CheckNativeTokenBalanceResultFailure} from './types';
+  CheckNativeTokenBalanceResultFailure,
+} from './types';
 
 import { checkErc20Balance, checkErc20Allowance, checkNativeTokenBalance } from './ability-checks';
 import {
@@ -21,8 +22,9 @@ import {
   sendErc20ApprovalTx,
   sendAcrossDepositTx,
   getRpcUrl,
+  convertTokenDecimals,
 } from './ability-helpers';
-import { ACROSS_CHAIN_IDS, USDC_DECIMALS } from './config';
+import { ACROSS_CHAIN_IDS, getUsdcTokenDecimals } from './config';
 import {
   executeFailSchema,
   executeSuccessSchema,
@@ -30,9 +32,9 @@ import {
   precheckSuccessSchema,
   abilityParamsSchema,
 } from './schemas';
-import {
-  AbilityAction
-} from './types';
+import { AbilityAction } from './types';
+
+const SUPPORTED_CHAINS_MESSAGE = Object.keys(ACROSS_CHAIN_IDS).join(', ');
 
 // Declare Lit global for Lit Action environment
 declare const Lit: {
@@ -71,9 +73,12 @@ export const vincentAbility = createVincentAbility({
     // Validate route is supported
     if (!isAcrossRouteSupported(sourceChain, destinationChain)) {
       return fail({
-        reason: `Route from ${sourceChain} to ${destinationChain} is not supported by Across Protocol. Supported routes: Base ↔ Arbitrum ↔ Ethereum`,
+        reason: `Route from ${sourceChain} to ${destinationChain} is not supported by Across Protocol. Supported chains: ${SUPPORTED_CHAINS_MESSAGE}`,
       });
     }
+
+    const sourceUsdcDecimals = getUsdcTokenDecimals(sourceChain);
+    const destinationUsdcDecimals = getUsdcTokenDecimals(destinationChain);
 
     // Get RPC URL (use provided or resolve via Lit's chain config)
     let finalRpcUrl: string;
@@ -113,7 +118,7 @@ export const vincentAbility = createVincentAbility({
 
     // 2. Get USDC token address for source chain
     const usdcTokenAddress = getUsdcTokenAddress(sourceChain);
-    const requiredUsdcAmount = ethers.utils.parseUnits(amount, USDC_DECIMALS);
+    const requiredUsdcAmount = ethers.utils.parseUnits(amount, sourceUsdcDecimals);
 
     // 3. Check USDC balance
     const checkErc20BalanceResult = await checkErc20Balance({
@@ -127,8 +132,11 @@ export const vincentAbility = createVincentAbility({
       return fail({
         reason: failure.reason,
         tokenAddress: failure.tokenAddress,
-        requiredTokenAmount: ethers.utils.formatUnits(failure.requiredTokenAmount, USDC_DECIMALS),
-        tokenBalance: ethers.utils.formatUnits(failure.tokenBalance, USDC_DECIMALS),
+        requiredTokenAmount: ethers.utils.formatUnits(
+          failure.requiredTokenAmount,
+          sourceUsdcDecimals,
+        ),
+        tokenBalance: ethers.utils.formatUnits(failure.tokenBalance, sourceUsdcDecimals),
       });
     }
 
@@ -148,14 +156,17 @@ export const vincentAbility = createVincentAbility({
     if (action === AbilityAction.Approve) {
       return succeed({
         nativeTokenBalance: checkNativeTokenBalanceResultSuccess?.ethBalance.toString(),
-        usdcBalance: ethers.utils.formatUnits(checkErc20BalanceResult.tokenBalance, USDC_DECIMALS),
+        usdcBalance: ethers.utils.formatUnits(
+          checkErc20BalanceResult.tokenBalance,
+          sourceUsdcDecimals,
+        ),
         currentAllowance: ethers.utils.formatUnits(
           checkErc20AllowanceResult.currentAllowance,
-          USDC_DECIMALS,
+          sourceUsdcDecimals,
         ),
         requiredAllowance: ethers.utils.formatUnits(
           checkErc20AllowanceResult.requiredAllowance,
-          USDC_DECIMALS,
+          sourceUsdcDecimals,
         ),
         spokePoolAddress,
       });
@@ -187,28 +198,35 @@ export const vincentAbility = createVincentAbility({
       );
 
       if (feeData && feeData.outputAmount && BigInt(feeData.outputAmount) > 0) {
-        estimatedOutputAmount = ethers.utils.formatUnits(feeData.outputAmount, USDC_DECIMALS);
+        const outputDecimals = feeData.outputToken?.decimals ?? destinationUsdcDecimals;
+        estimatedOutputAmount = ethers.utils.formatUnits(feeData.outputAmount, outputDecimals);
       }
     } catch (error) {
       console.warn('Failed to fetch Across API fees, will use fallback estimation:', error);
       // Use fallback estimation (9970/10000 = 30bps fee)
-      estimatedOutputAmount = ethers.utils.formatUnits(
-        requiredUsdcAmount.mul(9970).div(10000),
-        USDC_DECIMALS,
+      const discountedAmount = requiredUsdcAmount.mul(9970).div(10000);
+      const convertedAmount = convertTokenDecimals(
+        discountedAmount,
+        sourceUsdcDecimals,
+        destinationUsdcDecimals,
       );
+      estimatedOutputAmount = ethers.utils.formatUnits(convertedAmount, destinationUsdcDecimals);
     }
 
     // 9. Return success with validation results
     return succeed({
       nativeTokenBalance: checkNativeTokenBalanceResultSuccess?.ethBalance.toString(),
-      usdcBalance: ethers.utils.formatUnits(checkErc20BalanceResult.tokenBalance, USDC_DECIMALS),
+      usdcBalance: ethers.utils.formatUnits(
+        checkErc20BalanceResult.tokenBalance,
+        sourceUsdcDecimals,
+      ),
       currentAllowance: ethers.utils.formatUnits(
         checkErc20AllowanceResult.currentAllowance,
-        USDC_DECIMALS,
+        sourceUsdcDecimals,
       ),
       requiredAllowance: ethers.utils.formatUnits(
         checkErc20AllowanceResult.requiredAllowance,
-        USDC_DECIMALS,
+        sourceUsdcDecimals,
       ),
       spokePoolAddress,
       estimatedOutputAmount,
@@ -233,9 +251,12 @@ export const vincentAbility = createVincentAbility({
       // Validate route is supported
       if (!isAcrossRouteSupported(sourceChain, destinationChain)) {
         return fail({
-          reason: `Route from ${sourceChain} to ${destinationChain} is not supported by Across Protocol`,
+          reason: `Route from ${sourceChain} to ${destinationChain} is not supported by Across Protocol. Supported chains: ${SUPPORTED_CHAINS_MESSAGE}`,
         });
       }
+
+      const sourceUsdcDecimals = getUsdcTokenDecimals(sourceChain);
+      const destinationUsdcDecimals = getUsdcTokenDecimals(destinationChain);
 
       // Get RPC URL (use provided or resolve via Lit's chain config)
       let finalRpcUrl: string;
@@ -260,7 +281,7 @@ export const vincentAbility = createVincentAbility({
       const usdcTokenAddress = getUsdcTokenAddress(sourceChain);
       const outputTokenAddress = getUsdcTokenAddress(destinationChain);
       const spokePoolAddress = getAcrossSpokePool(sourceChain);
-      const requiredUsdcAmount = ethers.utils.parseUnits(amount, USDC_DECIMALS);
+      const requiredUsdcAmount = ethers.utils.parseUnits(amount, sourceUsdcDecimals);
 
       // 1. Handle approval action
       let approvalTxHash: string | undefined;
@@ -279,18 +300,18 @@ export const vincentAbility = createVincentAbility({
           console.log(
             `Sufficient allowance already exists for spender ${spokePoolAddress}, skipping approval transaction. Current allowance: ${ethers.utils.formatUnits(
               checkErc20AllowanceResult.currentAllowance,
-              USDC_DECIMALS,
+              sourceUsdcDecimals,
             )}`,
           );
 
           return succeed({
             currentAllowance: ethers.utils.formatUnits(
               checkErc20AllowanceResult.currentAllowance,
-              USDC_DECIMALS,
+              sourceUsdcDecimals,
             ),
             requiredAllowance: ethers.utils.formatUnits(
               checkErc20AllowanceResult.requiredAllowance,
-              USDC_DECIMALS,
+              sourceUsdcDecimals,
             ),
             approvalTxHash: undefined,
             approvalTxUserOperationHash: undefined,
@@ -320,8 +341,14 @@ export const vincentAbility = createVincentAbility({
             return succeed({
               approvalTxHash,
               approvalTxUserOperationHash,
-              currentAllowance: ethers.utils.formatUnits(failure.currentAllowance, USDC_DECIMALS),
-              requiredAllowance: ethers.utils.formatUnits(failure.requiredAllowance, USDC_DECIMALS),
+              currentAllowance: ethers.utils.formatUnits(
+                failure.currentAllowance,
+                sourceUsdcDecimals,
+              ),
+              requiredAllowance: ethers.utils.formatUnits(
+                failure.requiredAllowance,
+                sourceUsdcDecimals,
+              ),
             });
           } else {
             return fail({
@@ -389,7 +416,8 @@ export const vincentAbility = createVincentAbility({
 
           // Validate fee data
           if (feeData && feeData.outputAmount && BigInt(feeData.outputAmount) > 0) {
-            estimatedOutputAmount = ethers.utils.formatUnits(feeData.outputAmount, USDC_DECIMALS);
+            const outputDecimals = feeData.outputToken?.decimals ?? destinationUsdcDecimals;
+            estimatedOutputAmount = ethers.utils.formatUnits(feeData.outputAmount, outputDecimals);
           }
         } catch (error) {
           console.warn('Failed to fetch Across API fees, using fallback estimation:', error);
@@ -397,12 +425,18 @@ export const vincentAbility = createVincentAbility({
         }
 
         // Build deposit parameters
-        const depositParams = await buildDepositParams(requiredUsdcAmount, !!feeData, feeData);
+        const depositParams = await buildDepositParams(
+          requiredUsdcAmount,
+          sourceUsdcDecimals,
+          destinationUsdcDecimals,
+          !!feeData,
+          feeData,
+        );
 
         if (!estimatedOutputAmount) {
           estimatedOutputAmount = ethers.utils.formatUnits(
             depositParams.outputAmount,
-            USDC_DECIMALS,
+            destinationUsdcDecimals,
           );
         }
 

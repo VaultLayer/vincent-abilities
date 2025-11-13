@@ -2,6 +2,8 @@ import { ethers } from 'ethers';
 
 import type { AcrossFeeData } from './get-across-fees';
 
+import { convertTokenDecimals } from './convert-token-decimals';
+
 export interface DepositParams {
   outputAmount: ethers.BigNumber;
   quoteTimestamp: number;
@@ -15,6 +17,8 @@ export interface DepositParams {
  */
 export async function buildDepositParams(
   inputAmount: ethers.BigNumber,
+  inputTokenDecimals: number,
+  outputTokenDecimals: number,
   useApiFees = true,
   feeData?: AcrossFeeData,
 ): Promise<DepositParams> {
@@ -33,7 +37,12 @@ export async function buildDepositParams(
     const fillBuffer = 3600; // 1 hour buffer
 
     // Conservative 30 bps fee estimate (9970/10000)
-    const outputAmount = inputAmount.mul(9970).div(10000);
+    const discountedInputAmount = inputAmount.mul(9970).div(10000);
+    const outputAmount = convertTokenDecimals(
+      discountedInputAmount,
+      inputTokenDecimals,
+      outputTokenDecimals,
+    );
 
     return {
       outputAmount,

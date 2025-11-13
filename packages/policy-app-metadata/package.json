@@ -1,6 +1,6 @@
 {
   "name": "@vaultlayer/vincent-policy-app-metadata",
-  "version": "0.0.3",
+  "version": "0.2.0",
   "description": "A Vincent policy that validates allowed secret prefixes and stores metadata",
   "publishConfig": {
     "access": "public"

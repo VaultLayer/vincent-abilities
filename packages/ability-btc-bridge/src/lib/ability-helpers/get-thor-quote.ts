@@ -1,6 +1,6 @@
 import type { ThorQuoteResponse } from '../types';
 
-import { THORCHAIN_API_ENDPOINTS, QUOTE_TOLERANCE_BPS } from '../config';
+import { THORCHAIN_API_ENDPOINTS, QUOTE_TOLERANCE_BPS, LIQUIDITY_TOLERANCE_BPS } from '../config';
 
 // Declare fetch if not available (for browser environments)
 declare const fetch: any;
@@ -9,22 +9,42 @@ export interface GetThorQuoteParams {
   fromAsset: string;
   toAsset: string;
   amount1e8: string;
-  destination: string;
+  destination?: string;
   toleranceBps?: number;
+  affiliate?: string;
+  affiliateBps?: number;
+  streamingInterval?: number;
+  liquidityToleranceBps?: number;
 }
 
 /**
  * Get THORChain quote for a swap
  */
 export async function getThorQuote(params: GetThorQuoteParams): Promise<ThorQuoteResponse> {
-  const { fromAsset, toAsset, amount1e8, destination, toleranceBps = QUOTE_TOLERANCE_BPS } = params;
+  const {
+    fromAsset,
+    toAsset,
+    amount1e8,
+    destination,
+    toleranceBps = QUOTE_TOLERANCE_BPS,
+    affiliate = 'vl',
+    affiliateBps = 10, // 10 bps is 0.1%
+    streamingInterval = 1,
+    liquidityToleranceBps = LIQUIDITY_TOLERANCE_BPS,
+  } = params;
 
   try {
     const url = new URL(THORCHAIN_API_ENDPOINTS.quote);
     url.searchParams.set('from_asset', fromAsset);
     url.searchParams.set('to_asset', toAsset);
     url.searchParams.set('amount', String(amount1e8));
-    url.searchParams.set('destination', destination);
+    if (destination) {
+      url.searchParams.set('destination', destination);
+    }
+    url.searchParams.set('affiliate', affiliate);
+    url.searchParams.set('affiliate_bps', String(affiliateBps));
+    url.searchParams.set('streaming_interval', String(streamingInterval));
+    url.searchParams.set('liquidity_tolerance_bps', String(liquidityToleranceBps));
     url.searchParams.set('tolerance_bps', String(toleranceBps));
 
     const response = await fetch(url.toString(), { timeout: 15000 });

@@ -13,15 +13,16 @@ NC='\033[0m' # No Color
 
 # Packages to process
 PACKAGES=(
-  "ability-btc-psbt-signer"
-  "ability-native-send"
   "policy-btc-outputs"
-  "policy-counter"
+  "policy-evm-recipients"
+  "ability-btc-psbt-signer"
+  "ability-evm-send"
   "ability-across-bridge"
   "ability-molten-swap"
   "ability-coredao-bridge"
   "ability-btc-bridge"
   "ability-unpermit-app"
+  "ability-aave"
 )
 
 # File to store results
@@ -70,6 +71,85 @@ bump_version() {
   patch=$((patch + 1))
   
   echo "$major.$minor.$patch"
+}
+
+# Convert semantic version to comparable integer
+version_to_number() {
+  local version=$1
+  IFS='.' read -ra PARTS <<< "$version"
+  local major="${PARTS[0]}"
+  local minor="${PARTS[1]}"
+  local patch="${PARTS[2]}"
+  printf "%03d%03d%03d" "$major" "$minor" "$patch"
+}
+
+# Compare two semantic versions
+compare_versions() {
+  local v1_num
+  local v2_num
+  v1_num=$(version_to_number "$1")
+  v2_num=$(version_to_number "$2")
+  if (( v1_num > v2_num )); then
+    echo 1
+  elif (( v1_num < v2_num )); then
+    echo -1
+  else
+    echo 0
+  fi
+}
+
+# Determine a global version that is unpublished for all packages
+determine_target_version() {
+  local highest_version=""
+  
+  for package in "${PACKAGES[@]}"; do
+    local current_version
+    current_version=$(get_current_version "$package")
+    if [ -z "$highest_version" ] || [ "$(compare_versions "$current_version" "$highest_version")" -gt 0 ]; then
+      highest_version="$current_version"
+    fi
+  done
+  
+  local target_version="$highest_version"
+  local conflict=true
+  
+  while [ "$conflict" = true ]; do
+    conflict=false
+    for package in "${PACKAGES[@]}"; do
+      local package_name
+      package_name=$(get_package_name "$package")
+      if version_exists_on_npm "$package_name" "$target_version"; then
+        conflict=true
+        target_version=$(bump_version "$target_version")
+        break
+      fi
+    done
+  done
+  
+  echo "$target_version"
+}
+
+# Align all packages to the same target version
+align_package_versions() {
+  local target_version=$1
+  echo ""
+  echo -e "${BLUE}╔════════════════════════════════════════════════════╗${NC}"
+  echo -e "${BLUE}║   Setting package versions                         ║${NC}"
+  echo -e "${BLUE}╚════════════════════════════════════════════════════╝${NC}"
+  echo ""
+  echo -e "${BLUE}Target version for this run: $target_version${NC}"
+  
+  for package in "${PACKAGES[@]}"; do
+    local current_version
+    current_version=$(get_current_version "$package")
+    if [ "$current_version" != "$target_version" ]; then
+      echo -e "${BLUE}Updating $package from $current_version to $target_version...${NC}"
+      update_package_version "$package" "$target_version"
+      echo -e "${GREEN}  ✅ Version updated${NC}"
+    else
+      echo -e "${GREEN}$package already at target version $target_version${NC}"
+    fi
+  done
 }
 
 # Function to update version in package.json
@@ -211,16 +291,17 @@ echo -e "${BLUE}║   PHASE 1: Building all packages    ║${NC}"
 echo -e "${BLUE}╚══════════════════════════════════════╝${NC}"
 echo ""
 
+# Determine and align versions before building
+target_version=$(determine_target_version)
+align_package_versions "$target_version"
+
 declare -a BUILT_PACKAGES
 BUILD_FAILED=false
 
 for package in "${PACKAGES[@]}"; do
   echo ""
   echo -e "${BLUE}Building $package...${NC}"
-  
-  # Check and bump version if needed
-  final_version=$(ensure_publishable_version "$package")
-  
+
   # Build
   if build_package "$package"; then
     BUILT_PACKAGES+=("$package")

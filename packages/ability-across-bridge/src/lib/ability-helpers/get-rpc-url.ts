@@ -12,6 +12,7 @@ const LIT_CHAIN_NAME_MAP: Record<SupportedChainKey, string> = {
   base: 'base',
   arbitrum: 'arbitrum',
   ethereum: 'ethereum',
+  bsc: 'bsc',
 };
 
 // Default RPC URLs as fallback
@@ -19,6 +20,7 @@ const DEFAULT_RPC_URLS: Record<SupportedChainKey, string> = {
   base: 'https://mainnet.base.org',
   arbitrum: 'https://arb1.arbitrum.io/rpc',
   ethereum: 'https://eth.llamarpc.com',
+  bsc: 'https://bsc-dataseed.binance.org',
 };
 
 /**

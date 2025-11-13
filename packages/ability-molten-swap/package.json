@@ -1,6 +1,6 @@
 {
   "name": "@vaultlayer/vincent-ability-molten-swap",
-  "version": "0.1.3",
+  "version": "0.2.6",
   "publishConfig": {
     "access": "public"
   },

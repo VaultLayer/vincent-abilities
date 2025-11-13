@@ -1,17 +1,18 @@
 # Vincent Ability: Unpermit App
 
-A Vincent Ability that unpermits an app version for a delegatee by calling the Lit contracts directly.
+A Vincent Ability that allows an agent to revoke its own app permissions, useful for cleaning up after completing tasks.
 
 ## Overview
 
-The Unpermit App Ability enables Vincent Apps to revoke permissions for a specific app version by calling the `unPermitAppVersion` function on the Lit Vincent Tool Policies contract. This allows apps to remove permissions that were previously granted to a specific app version.
+The Unpermit App Ability allows an agent to revoke its own app permissions by automatically unpermitting the currently permitted app version. This is useful for cleaning up permissions after the app completes its intended task, ensuring the agent can only use the app when explicitly needed.
 
 ## Features
 
-- Unpermits an app version for a delegatee
+- Automatically derives app ID and version from the delegatee
+- Unpermits the currently permitted app version for the agent
+- Validates that the app is delegated to the delegatee
 - Calls the Lit Vincent Tool Policies contract directly
-- Validates app ID and app version before execution
-- Uses PKP-derived keys for transaction signing
+- Uses PKP-derived keys for secure transaction signing
 - No policies required - simple and straightforward
 
 ## Installation
@@ -31,31 +32,20 @@ yarn add @vaultlayer/vincent-ability-unpermit-app
 ```typescript
 import { bundledVincentAbility } from '@vaultlayer/vincent-ability-unpermit-app';
 
-// Unpermit an app version
+// Unpermit the currently permitted app version
+// No parameters needed - app ID and version are derived automatically
 const result = await executeAbility({
   ability: bundledVincentAbility,
-  params: {
-    appId: 1, // App ID (positive integer)
-    appVersion: 1, // App version (positive integer)
-  },
+  params: {},
 });
 ```
 
 ## Parameters
 
-### Required Parameters
+This ability requires no parameters. The app ID and version are automatically derived from:
 
-#### appId
-
-- **Type**: `number`
-- **Description**: The ID of the app to unpermit (must be a positive integer)
-- **Example**: `1`, `2`, `42`
-
-#### appVersion
-
-- **Type**: `number`
-- **Description**: The version of the app to unpermit (must be a positive integer)
-- **Example**: `1`, `2`, `10`
+- The delegatee's address (via `getAppByDelegatee`)
+- The currently permitted app version for the PKP token (via `getPermittedAppVersionForPkp`)
 
 ## Response Format
 
@@ -94,23 +84,23 @@ const result = await executeAbility({
 
 ### Contract Address
 
-- **Contract**: `0x78Cd1d270Ff12BA55e98BDff1f3646426E25D932`
+- **Contract**: `0xa3a602F399E9663279cdF63a290101cB6560A87e`
 - **Chain**: Yellowstone (Lit Protocol)
 - **Chain ID**: `175188`
 - **Function**: `unPermitAppVersion(uint256 pkpTokenId, uint256 appId, uint256 appVersion)`
 
 ## Use Cases
 
-- **Permission Management**: Remove permissions for specific app versions
-- **Security Revocation**: Quickly revoke access when needed
-- **Version Control**: Manage permissions per app version
-- **Access Control**: Fine-grained control over app permissions
+- **Permission Cleanup**: Automatically revoke permissions after completing a task
+- **Security**: Ensure agents only retain permissions when actively needed
+- **Self-Management**: Allow agents to clean up their own permissions
+- **Temporary Access**: Grant permissions for specific operations, then automatically revoke
 
 ## Security Considerations
 
+- **Delegatee Validation**: Verifies the app is actually delegated to the delegatee address
+- **Permission Verification**: Confirms a permitted version exists before attempting to unpermit
 - **PKP Token ID Validation**: Ensures PKP token ID is available before execution
-- **App ID Validation**: Validates app ID is a positive integer
-- **App Version Validation**: Validates app version is a positive integer
 - **Chain ID Verification**: Ensures correct chain before executing
 - **PKP Security**: Uses PKP-derived keys for secure transaction signing
 

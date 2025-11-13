@@ -1,6 +1,6 @@
 {
   "name": "@vaultlayer/vincent-ability-unpermit-app",
-  "version": "0.0.1",
+  "version": "0.2.6",
   "description": "A Vincent ability that unpermits an app version for a delegatee by calling the Lit contracts directly.",
   "main": "./dist/src/index.js",
   "module": "./dist/src/index.js",

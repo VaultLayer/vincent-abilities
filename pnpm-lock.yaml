@@ -143,7 +143,7 @@ importers:
         specifier: 8.29.0
         version: 8.29.0(eslint@9.22.0(jiti@2.6.1))(typescript@5.8.3)
 
-  packages/ability-across-bridge:
+  packages/ability-aave:
     dependencies:
       '@lit-protocol/vincent-ability-sdk':
         specifier: ^2.0.0
@@ -154,6 +154,37 @@ importers:
       '@lit-protocol/vincent-scaffold-sdk':
         specifier: ^1.1.7
         version: 1.1.8(@lit-protocol/vincent-app-sdk@2.2.3(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(viem@2.29.2(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@lit-protocol/vincent-tool-sdk@1.0.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))(@types/node@22.7.5)(bufferutil@4.0.9)(immer@10.1.3)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
+      ethers:
+        specifier: ^5.8.0
+        version: 5.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      tslib:
+        specifier: 2.8.1
+        version: 2.8.1
+      zod:
+        specifier: 3.25.76
+        version: 3.25.76
+    devDependencies:
+      '@lit-protocol/esbuild-plugin-polyfill-node':
+        specifier: ^0.3.0
+        version: 0.3.0(esbuild@0.19.12)
+      esbuild:
+        specifier: ^0.19.12
+        version: 0.19.12
+      ipfs-only-hash:
+        specifier: ^4.0.0
+        version: 4.0.0
+
+  packages/ability-across-bridge:
+    dependencies:
+      '@lit-protocol/vincent-ability-sdk':
+        specifier: ^2.0.0
+        version: 2.3.1(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(viem@2.33.0(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
+      '@lit-protocol/vincent-app-sdk':
+        specifier: ^2.0.0
+        version: 2.2.3(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(viem@2.33.0(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
+      '@lit-protocol/vincent-scaffold-sdk':
+        specifier: ^1.1.7
+        version: 1.1.8(@lit-protocol/vincent-app-sdk@2.2.3(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(viem@2.33.0(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@lit-protocol/vincent-tool-sdk@1.0.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))(@types/node@22.7.5)(bufferutil@4.0.9)(immer@10.1.3)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
       ethers:
         specifier: ^5.8.0
         version: 5.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -222,9 +253,6 @@ importers:
       '@noble/secp256k1':
         specifier: ^2.2.3
         version: 2.3.0
-      '@vaultlayer/vincent-policy-btc-bridge':
-        specifier: workspace:*
-        version: link:../policy-btc-bridge
       bitcoinjs-lib:
         specifier: ^6.1.7
         version: 6.1.7
@@ -359,6 +387,40 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
 
+  packages/ability-evm-send:
+    dependencies:
+      '@lit-protocol/vincent-ability-sdk':
+        specifier: ^2.0.0
+        version: 2.3.1(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(viem@2.33.0(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
+      '@lit-protocol/vincent-app-sdk':
+        specifier: ^2.0.0
+        version: 2.2.3(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(viem@2.33.0(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
+      '@lit-protocol/vincent-scaffold-sdk':
+        specifier: ^2.0.0
+        version: 2.0.0(@lit-protocol/vincent-ability-sdk@2.3.1(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(viem@2.33.0(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@types/node@22.7.5)(bufferutil@4.0.9)(immer@10.1.3)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
+      '@vaultlayer/vincent-policy-evm-recipients':
+        specifier: workspace:*
+        version: link:../policy-evm-recipients
+      ethers:
+        specifier: 5.8.0
+        version: 5.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      tslib:
+        specifier: 2.8.1
+        version: 2.8.1
+      zod:
+        specifier: 3.25.76
+        version: 3.25.76
+    devDependencies:
+      '@lit-protocol/esbuild-plugin-polyfill-node':
+        specifier: ^0.3.0
+        version: 0.3.0(esbuild@0.19.12)
+      esbuild:
+        specifier: 0.19.12
+        version: 0.19.12
+      ipfs-only-hash:
+        specifier: 4.0.0
+        version: 4.0.0
+
   packages/ability-molten-swap:
     dependencies:
       '@lit-protocol/vincent-ability-sdk':
@@ -483,37 +545,6 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
 
-  packages/policy-btc-bridge:
-    dependencies:
-      '@lit-protocol/vincent-ability-sdk':
-        specifier: ^2.0.0
-        version: 2.3.1(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(viem@2.33.0(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
-      '@lit-protocol/vincent-app-sdk':
-        specifier: ^2.0.0
-        version: 2.2.3(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(viem@2.33.0(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
-      '@noble/secp256k1':
-        specifier: ^2.2.3
-        version: 2.3.0
-      bitcoinjs-lib:
-        specifier: ^6.1.7
-        version: 6.1.7
-      tslib:
-        specifier: 2.8.1
-        version: 2.8.1
-      zod:
-        specifier: 3.25.76
-        version: 3.25.76
-    devDependencies:
-      '@lit-protocol/esbuild-plugin-polyfill-node':
-        specifier: ^0.3.0
-        version: 0.3.0(esbuild@0.19.12)
-      esbuild:
-        specifier: ^0.19.12
-        version: 0.19.12
-      ipfs-only-hash:
-        specifier: ^4.0.0
-        version: 4.0.0
-
   packages/policy-btc-outputs:
     dependencies:
       '@lit-protocol/vincent-ability-sdk':
@@ -602,6 +633,31 @@ importers:
         version: 0.19.12
       ipfs-only-hash:
         specifier: 4.0.0
+        version: 4.0.0
+
+  packages/policy-evm-recipients:
+    dependencies:
+      '@lit-protocol/vincent-ability-sdk':
+        specifier: ^2.0.0
+        version: 2.3.1(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(viem@2.33.0(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
+      '@lit-protocol/vincent-app-sdk':
+        specifier: ^2.0.0
+        version: 2.2.3(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(viem@2.33.0(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
+      tslib:
+        specifier: 2.8.1
+        version: 2.8.1
+      zod:
+        specifier: 3.25.76
+        version: 3.25.76
+    devDependencies:
+      '@lit-protocol/esbuild-plugin-polyfill-node':
+        specifier: ^0.3.0
+        version: 0.3.0(esbuild@0.19.12)
+      esbuild:
+        specifier: ^0.19.12
+        version: 0.19.12
+      ipfs-only-hash:
+        specifier: ^4.0.0
         version: 4.0.0
 
   packages/test-e2e:

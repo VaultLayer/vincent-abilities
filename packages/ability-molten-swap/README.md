@@ -17,14 +17,14 @@ The Molten Swap Ability enables Vincent Apps to swap tokens on the CoreDAO chain
 
 The ability supports the following tokens on CoreDAO:
 
-- **USDT**: `0x900101d06a7426441ae63e9ab3b9b0f63be145f1` (6 decimals)
-- **USDC**: `0xa4151b2b3e269645181dccf2d426ce75fcbdeca9` (6 decimals)
-- **wBTC**: `0x5832f53d147b3d6cd4578b9cbd62425c7ea9d0bd` (8 decimals)
-- **wCORE**: `0x191e94fa59739e188dce837f7f6978d84727ad01` (18 decimals)
+- **USDT**: `0x900101d06A7426441Ae63e9AB3B9b0F63Be145F1` (6 decimals)
+- **USDC**: `0xa4151B2B3e269645181dCcF2D426cE75fcbDeca9` (6 decimals)
+- **wBTC**: `0x5832f53d147b3d6Cd4578B9CBD62425C7ea9d0Bd` (8 decimals)
+- **wCORE**: `0x191E94fa59739e188dcE837F7f6978d84727AD01` (18 decimals)
 - **vltCORE**: `0x3093304eCE0F35969B580CbD155a1357829870f2` (18 decimals)
 - **ASX**: `0xB28B43209d9de61306172Af0320f4f55e50E2f29` (18 decimals)
 
-Tokens can be referenced by either their address or symbol (e.g., `'USDC'` or `'0xa4151b2b3e269645181dccf2d426ce75fcbdeca9'`).
+Tokens can be referenced by either their address or symbol (e.g., `'USDC'` or `'0xa4151B2B3e269645181dCcF2D426cE75fcbDeca9'`).
 
 ## Installation
 
@@ -83,14 +83,14 @@ const approvalResult = await executeAbility({
 
 - **Type**: `string`
 - **Description**: Input token address or symbol
-- **Example**: `'USDC'` or `'0xa4151b2b3e269645181dccf2d426ce75fcbdeca9'`
+- **Example**: `'USDC'` or `'0xa4151B2B3e269645181dCcF2D426cE75fcbDeca9'`
 - **Validation**: Must be a supported token address or symbol
 
 #### tokenOut
 
 - **Type**: `string`
 - **Description**: Output token address or symbol
-- **Example**: `'USDT'` or `'0x900101d06a7426441ae63e9ab3b9b0f63be145f1'`
+- **Example**: `'USDT'` or `'0x900101d06A7426441Ae63e9AB3B9b0F63Be145F1'`
 - **Validation**: Must be a supported token address or symbol
 - **Note**: Required for swap action, may be unused for approve action
 
@@ -226,8 +226,8 @@ const result = await executeAbility({
   ability: bundledVincentAbility,
   params: {
     action: 'swap',
-    tokenIn: '0xa4151b2b3e269645181dccf2d426ce75fcbdeca9', // USDC address
-    tokenOut: '0x5832f53d147b3d6cd4578b9cbd62425c7ea9d0bd', // wBTC address
+    tokenIn: '0xa4151B2B3e269645181dCcF2D426cE75fcbDeca9', // USDC address
+    tokenOut: '0x5832f53d147b3d6Cd4578B9CBD62425C7ea9d0Bd', // wBTC address
     recipient: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb',
     amountIn: '1000',
     amountOutMinimum: '0.001', // Minimum wBTC expected

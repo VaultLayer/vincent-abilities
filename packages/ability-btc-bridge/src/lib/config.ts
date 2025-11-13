@@ -9,8 +9,16 @@ export const WRAPPED_BTC_TOKEN_ADDRESSES = {
   ethereum: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599' as const, // WBTC
 } as const;
 
+// USDC token addresses
+export const USDC_TOKEN_ADDRESSES = {
+  base: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' as const, // USDC on Base
+  ethereum: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48' as const, // USDC on Ethereum
+} as const;
+
 // Both cbBTC and WBTC have 8 decimals
 export const BTC_TOKEN_DECIMALS = 8;
+// USDC has 6 decimals
+export const USDC_TOKEN_DECIMALS = 6;
 
 // THORChain API endpoints
 export const THORCHAIN_API_ENDPOINTS = {
@@ -23,11 +31,14 @@ export const THOR_ROUTER_ABI = [
   'function depositWithExpiry(address payable vault, address asset, uint256 amount, string calldata memo, uint256 expiration) external payable',
 ];
 
-// Minimum bridge amount (0.001 BTC)
-export const MIN_BRIDGE_AMOUNT = 0.001;
+// Minimum bridge amounts
+export const MIN_BRIDGE_AMOUNT = 0.001; // 0.001 BTC for cbBTC/wBTC
+export const MIN_USDC_BRIDGE_AMOUNT = 5; // $5 USDC minimum
 
 // Quote tolerance in basis points (50 bps = 0.5%)
 export const QUOTE_TOLERANCE_BPS = 50;
+// Liquidity tolerance in basis points (100 bps = 1%)
+export const LIQUIDITY_TOLERANCE_BPS = 100;
 
 // Deposit expiration time in seconds (20 minutes)
 export const DEPOSIT_EXPIRATION_SECONDS = 20 * 60;

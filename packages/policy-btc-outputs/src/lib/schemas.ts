@@ -4,7 +4,7 @@ export const abilityParamsSchema = z.object({
   psbtBase64: z.string().describe('The base64 encoded PSBT to be evaluated'),
   btcNetwork: z.enum(['testnet', 'livenet']).describe('The Bitcoin network (testnet or livenet)'),
   stakingLockTime: z
-    .number()
+    .union([z.number(), z.null()])
     .optional()
     .describe('The lockTime for staking transactions (Unix timestamp)'),
 });

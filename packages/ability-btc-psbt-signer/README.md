@@ -64,6 +64,41 @@ const result = await vincentApp.executeAbility({
 });
 ```
 
+## Utility Functions
+
+The package exports utility functions to derive Bitcoin addresses and public keys from PKP public keys:
+
+### `getBtcAddress`
+
+Derives a Bitcoin address (P2WPKH) from a PKP public key:
+
+```typescript
+import { getBtcAddress } from '@vaultlayer/vincent-ability-btc-psbt-signer';
+
+const pkpPublicKey = '0x...'; // 132 hex characters
+
+// Get mainnet address
+const mainnetAddress = getBtcAddress(pkpPublicKey, 'livenet');
+
+// Get testnet address
+const testnetAddress = getBtcAddress(pkpPublicKey, 'testnet');
+```
+
+### `getBtcPubkey`
+
+Converts an Ethereum public key to a compressed Bitcoin public key:
+
+```typescript
+import { getBtcPubkey } from '@vaultlayer/vincent-ability-btc-psbt-signer';
+
+const pkpPublicKey = '0x...'; // 132 hex characters (uncompressed)
+
+// Get compressed Bitcoin public key (33 bytes Buffer)
+const btcPubKey = getBtcPubkey(pkpPublicKey);
+```
+
+These utilities can be used independently of the ability to derive Bitcoin addresses for PKPs without executing the ability.
+
 ## Policy Integration
 
 This ability works with the `@vaultlayer/vincent-policy-btc-outputs` policy to validate output addresses:
@@ -88,6 +123,8 @@ The ability derives Bitcoin keys from the PKP's Ethereum public key:
 2. Converts it to a compressed public key (33 bytes)
 3. Derives a P2WPKH (native SegWit) Bitcoin address
 4. Uses this key for signing PSBT inputs
+
+The derivation logic is available as exported utility functions (`getBtcAddress` and `getBtcPubkey`) for use outside of the ability execution context.
 
 ## CLTV Support
 

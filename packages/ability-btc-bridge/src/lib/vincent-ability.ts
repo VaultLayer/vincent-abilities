@@ -11,12 +11,13 @@ import type {
   CheckNativeTokenBalanceResultSuccess,
   CheckErc20AllowanceResultFailure,
   CheckErc20BalanceResultFailure,
-  CheckNativeTokenBalanceResultFailure} from './types';
+  CheckNativeTokenBalanceResultFailure,
+} from './types';
 
 import { checkErc20Balance, checkErc20Allowance, checkNativeTokenBalance } from './ability-checks';
 import {
   getRpcUrl,
-  getWrappedBtcToken,
+  getSourceToken,
   fetchThorInbound,
   getThorQuote,
   ldTo1e8,
@@ -32,9 +33,7 @@ import {
   precheckSuccessSchema,
   abilityParamsSchema,
 } from './schemas';
-import {
-  AbilityAction
-} from './types';
+import { AbilityAction } from './types';
 
 // Declare Lit global for Lit Action environment
 declare const Lit: {
@@ -85,7 +84,15 @@ export const vincentAbility = createVincentAbility({
   precheck: async ({ abilityParams }, { succeed, fail, delegation: { delegatorPkpInfo } }) => {
     console.log('Prechecking BtcBridgeAbility', JSON.stringify(abilityParams, bigintReplacer, 2));
 
-    const { action, sourceChain, amount, btcNetwork, rpcUrl, alchemyGasSponsor } = abilityParams;
+    const {
+      action,
+      sourceChain,
+      sourceAsset = 'cbBTC',
+      amount,
+      btcNetwork,
+      rpcUrl,
+      alchemyGasSponsor,
+    } = abilityParams;
 
     // Get RPC URL
     let finalRpcUrl: string;
@@ -109,7 +116,7 @@ export const vincentAbility = createVincentAbility({
     const delegatorPkpAddress = delegatorPkpInfo.ethAddress;
 
     // Check minimum amount
-    const minCheck = checkMinimumAmount(amount);
+    const minCheck = checkMinimumAmount(amount, sourceAsset);
     if (!minCheck.valid) {
       return fail({
         reason: minCheck.error || 'Amount below minimum requirement',
@@ -150,11 +157,13 @@ export const vincentAbility = createVincentAbility({
       checkNativeTokenBalanceResultSuccess = checkNativeTokenBalanceResult;
     }
 
-    // Get wrapped BTC token address
-    const tokenInfo = getWrappedBtcToken(sourceChain);
+    // Validate sourceAsset and chain combination is handled by getSourceToken
+
+    // Get source token address (wrapped BTC or USDC)
+    const tokenInfo = getSourceToken(sourceChain, sourceAsset);
     const requiredTokenAmount = ethers.utils.parseUnits(amount, tokenInfo.decimals);
 
-    // Check wrapped BTC balance
+    // Check source token balance (wrapped BTC or USDC)
     const checkErc20BalanceResult = await checkErc20Balance({
       provider,
       pkpEthAddress: delegatorPkpAddress,
@@ -168,9 +177,9 @@ export const vincentAbility = createVincentAbility({
         tokenAddress: failure.tokenAddress,
         requiredTokenAmount: ethers.utils.formatUnits(
           failure.requiredTokenAmount,
-          BTC_TOKEN_DECIMALS,
+          tokenInfo.decimals,
         ),
-        tokenBalance: ethers.utils.formatUnits(failure.tokenBalance, BTC_TOKEN_DECIMALS),
+        tokenBalance: ethers.utils.formatUnits(failure.tokenBalance, tokenInfo.decimals),
       });
     }
 
@@ -189,23 +198,32 @@ export const vincentAbility = createVincentAbility({
 
     // If action is approve, return current allowance info
     if (action === AbilityAction.Approve) {
-      return succeed({
+      const result: any = {
         nativeTokenBalance: checkNativeTokenBalanceResultSuccess?.ethBalance.toString(),
-        wrappedBtcBalance: ethers.utils.formatUnits(
-          checkErc20BalanceResult.tokenBalance,
-          BTC_TOKEN_DECIMALS,
-        ),
         currentAllowance: ethers.utils.formatUnits(
           checkErc20AllowanceResult.currentAllowance,
-          BTC_TOKEN_DECIMALS,
+          tokenInfo.decimals,
         ),
         requiredAllowance: ethers.utils.formatUnits(
           checkErc20AllowanceResult.requiredAllowance,
-          BTC_TOKEN_DECIMALS,
+          tokenInfo.decimals,
         ),
         thorRouterAddress: thorInbound.router,
         pkpBtcAddress,
-      });
+      };
+      if (sourceAsset === 'USDC') {
+        result.usdcBalance = ethers.utils.formatUnits(
+          checkErc20BalanceResult.tokenBalance,
+          tokenInfo.decimals,
+        );
+      } else {
+        // cbBTC or wBTC
+        result.wrappedBtcBalance = ethers.utils.formatUnits(
+          checkErc20BalanceResult.tokenBalance,
+          tokenInfo.decimals,
+        );
+      }
+      return succeed(result);
     }
 
     // If action is bridge and allowance is insufficient, return failure
@@ -229,10 +247,17 @@ export const vincentAbility = createVincentAbility({
         amountLD: requiredTokenAmount,
       });
 
-      const fromAsset =
-        sourceChain === 'base'
-          ? `BASE.CBBTC-${tokenInfo.address}`
-          : `ETH.WBTC-${tokenInfo.address}`;
+      // Build fromAsset string based on source asset type
+      let fromAsset: string;
+      if (sourceAsset === 'USDC') {
+        const chainPrefix = sourceChain === 'base' ? 'BASE' : 'ETH';
+        fromAsset = `${chainPrefix}.USDC-${tokenInfo.address.toUpperCase()}`;
+      } else if (sourceAsset === 'cbBTC') {
+        fromAsset = `BASE.CBBTC-${tokenInfo.address}`;
+      } else {
+        // wBTC
+        fromAsset = `ETH.WBTC-${tokenInfo.address}`;
+      }
 
       const quote = await getThorQuote({
         fromAsset,
@@ -253,25 +278,34 @@ export const vincentAbility = createVincentAbility({
       // Don't fail precheck if quote fails, just don't provide estimate
     }
 
-    return succeed({
+    const result: any = {
       nativeTokenBalance: checkNativeTokenBalanceResultSuccess?.ethBalance.toString(),
-      wrappedBtcBalance: ethers.utils.formatUnits(
-        checkErc20BalanceResult.tokenBalance,
-        BTC_TOKEN_DECIMALS,
-      ),
       currentAllowance: ethers.utils.formatUnits(
         checkErc20AllowanceResult.currentAllowance,
-        BTC_TOKEN_DECIMALS,
+        tokenInfo.decimals,
       ),
       requiredAllowance: ethers.utils.formatUnits(
         checkErc20AllowanceResult.requiredAllowance,
-        BTC_TOKEN_DECIMALS,
+        tokenInfo.decimals,
       ),
       thorRouterAddress: thorInbound.router,
       estimatedOutputAmount,
       thorQuoteMemo,
       pkpBtcAddress,
-    });
+    };
+    if (sourceAsset === 'USDC') {
+      result.usdcBalance = ethers.utils.formatUnits(
+        checkErc20BalanceResult.tokenBalance,
+        tokenInfo.decimals,
+      );
+    } else {
+      // cbBTC or wBTC
+      result.wrappedBtcBalance = ethers.utils.formatUnits(
+        checkErc20BalanceResult.tokenBalance,
+        tokenInfo.decimals,
+      );
+    }
+    return succeed(result);
   },
 
   execute: async ({ abilityParams }, { succeed, fail, delegation: { delegatorPkpInfo } }) => {
@@ -280,6 +314,7 @@ export const vincentAbility = createVincentAbility({
     const {
       action,
       sourceChain,
+      sourceAsset = 'cbBTC',
       amount,
       btcNetwork,
       rpcUrl,
@@ -308,7 +343,10 @@ export const vincentAbility = createVincentAbility({
         });
       }
 
-      const tokenInfo = getWrappedBtcToken(sourceChain);
+      // Validate sourceAsset and chain combination is handled by getSourceToken
+
+      // Get source token address (wrapped BTC or USDC)
+      const tokenInfo = getSourceToken(sourceChain, sourceAsset);
       const requiredTokenAmount = ethers.utils.parseUnits(amount, tokenInfo.decimals);
 
       // Derive PKP Bitcoin address
@@ -459,10 +497,17 @@ export const vincentAbility = createVincentAbility({
           amountLD: requiredTokenAmount,
         });
 
-        const fromAsset =
-          sourceChain === 'base'
-            ? `BASE.CBBTC-${tokenInfo.address}`
-            : `ETH.WBTC-${tokenInfo.address}`;
+        // Build fromAsset string based on source asset type
+        let fromAsset: string;
+        if (sourceAsset === 'USDC') {
+          const chainPrefix = sourceChain === 'base' ? 'BASE' : 'ETH';
+          fromAsset = `${chainPrefix}.USDC-${tokenInfo.address.toUpperCase()}`;
+        } else if (sourceAsset === 'cbBTC') {
+          fromAsset = `BASE.CBBTC-${tokenInfo.address}`;
+        } else {
+          // wBTC
+          fromAsset = `ETH.WBTC-${tokenInfo.address}`;
+        }
 
         const quote = await getThorQuote({
           fromAsset,
@@ -473,7 +518,7 @@ export const vincentAbility = createVincentAbility({
 
         if (!quote.memo || !quote.memo.startsWith('SWAP:BTC.BTC:')) {
           throw new Error(
-            `Unexpected THOR memo for ${sourceChain} wrapped BTC swap: ${quote.memo}`,
+            `Unexpected THOR memo for ${sourceChain} ${sourceAsset} swap: ${quote.memo}`,
           );
         }
 

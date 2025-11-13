@@ -7,7 +7,16 @@ export const abilityParamsSchema = z.object({
       'Dictates whether to perform an ERC20 approval or a bridge operation using THORChain',
     ),
   sourceChain: z.enum(['base', 'ethereum']).describe('Source chain for the bridge operation'),
-  amount: z.string().describe('Amount of wrapped BTC to bridge as decimal string'),
+  sourceAsset: z
+    .enum(['USDC', 'cbBTC', 'wBTC'])
+    .optional()
+    .default('cbBTC')
+    .describe(
+      'Source asset type: USDC (Base or Ethereum), cbBTC (Base only), or wBTC (Ethereum only)',
+    ),
+  amount: z
+    .string()
+    .describe('Amount of source asset to bridge as decimal string (wrapped BTC or USDC)'),
   btcNetwork: z.enum(['testnet', 'livenet']).describe('The Bitcoin network (testnet or livenet)'),
   rpcUrl: z
     .string()
@@ -34,13 +43,20 @@ export const precheckSuccessSchema = z.object({
     .string()
     .optional()
     .describe('The balance of the native token used for gas fees'),
-  wrappedBtcBalance: z.string().describe('The balance of wrapped BTC token'),
+  wrappedBtcBalance: z
+    .string()
+    .optional()
+    .describe('The balance of wrapped BTC token (when sourceAsset is cbBTC or wBTC)'),
+  usdcBalance: z
+    .string()
+    .optional()
+    .describe('The balance of USDC token (when sourceAsset is USDC)'),
   currentAllowance: z
     .string()
-    .describe('The current allowance of wrapped BTC for the THORChain router'),
+    .describe('The current allowance of source asset for the THORChain router'),
   requiredAllowance: z
     .string()
-    .describe('The required allowance of wrapped BTC for the THORChain router'),
+    .describe('The required allowance of source asset for the THORChain router'),
   thorRouterAddress: z
     .string()
     .describe('The THORChain router contract address that will be used for the bridge'),
