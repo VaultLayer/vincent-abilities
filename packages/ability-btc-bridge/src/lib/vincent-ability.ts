@@ -39,6 +39,10 @@ import { AbilityAction } from './types';
 declare const Lit: {
   Actions: {
     getRpcUrl: (params: { chain: string }) => Promise<string>;
+    runOnce: (
+      params: { waitForResponse: boolean; name: string },
+      fn: () => Promise<string>,
+    ) => Promise<string>;
   };
 };
 
@@ -232,8 +236,8 @@ export const vincentAbility = createVincentAbility({
       return fail({
         reason: failure.reason,
         tokenAddress: failure.tokenAddress,
-        requiredAllowance: ethers.utils.formatUnits(failure.requiredAllowance, BTC_TOKEN_DECIMALS),
-        currentAllowance: ethers.utils.formatUnits(failure.currentAllowance, BTC_TOKEN_DECIMALS),
+        requiredAllowance: ethers.utils.formatUnits(failure.requiredAllowance, tokenInfo.decimals),
+        currentAllowance: ethers.utils.formatUnits(failure.currentAllowance, tokenInfo.decimals),
       });
     }
 
@@ -391,11 +395,11 @@ export const vincentAbility = createVincentAbility({
           return succeed({
             currentAllowance: ethers.utils.formatUnits(
               checkErc20AllowanceResult.currentAllowance,
-              BTC_TOKEN_DECIMALS,
+              tokenInfo.decimals,
             ),
             requiredAllowance: ethers.utils.formatUnits(
               checkErc20AllowanceResult.requiredAllowance,
-              BTC_TOKEN_DECIMALS,
+              tokenInfo.decimals,
             ),
             approvalTxHash: undefined,
             approvalTxUserOperationHash: undefined,
@@ -427,11 +431,11 @@ export const vincentAbility = createVincentAbility({
               approvalTxUserOperationHash,
               currentAllowance: ethers.utils.formatUnits(
                 failure.currentAllowance,
-                BTC_TOKEN_DECIMALS,
+                tokenInfo.decimals,
               ),
               requiredAllowance: ethers.utils.formatUnits(
                 failure.requiredAllowance,
-                BTC_TOKEN_DECIMALS,
+                tokenInfo.decimals,
               ),
             });
           } else {

@@ -38,11 +38,6 @@ export const abilityParamsSchema = z.object({
     .max(2)
     .optional()
     .describe('Interest rate mode: 1 for stable, 2 for variable (default: 2 for borrow/repay)'),
-  recipient: z
-    .string()
-    .regex(/^0x[a-fA-F0-9]{40}$/, 'Invalid recipient address')
-    .optional()
-    .describe('Recipient address for withdraw operation (optional, defaults to delegator address)'),
   rpcUrl: z.string().optional().describe('RPC URL used for precheck validations'),
   // Gas sponsorship parameters for EIP-7702
   alchemyGasSponsor: z

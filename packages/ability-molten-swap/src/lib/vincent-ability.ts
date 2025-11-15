@@ -8,7 +8,8 @@ import {
 import type {
   CheckErc20AllowanceResultFailure,
   CheckErc20BalanceResultFailure,
-  CheckNativeTokenBalanceResultFailure} from './types';
+  CheckNativeTokenBalanceResultFailure,
+} from './types';
 
 import { checkErc20Balance, checkErc20Allowance, checkNativeTokenBalance } from './ability-checks';
 import { getTokenInfo } from './ability-helpers/get-token-info';
@@ -22,10 +23,7 @@ import {
   precheckSuccessSchema,
   abilityParamsSchema,
 } from './schemas';
-import {
-  AbilityAction,
-  CheckNativeTokenBalanceResultSuccess
-} from './types';
+import { AbilityAction, CheckNativeTokenBalanceResultSuccess } from './types';
 
 export const bigintReplacer = (key: any, value: any) => {
   return typeof value === 'bigint' ? value.toString() : value;
@@ -175,8 +173,7 @@ export const vincentAbility = createVincentAbility({
   execute: async ({ abilityParams }, { succeed, fail, delegation: { delegatorPkpInfo } }) => {
     console.log('Executing MoltenSwapAbility', JSON.stringify(abilityParams, bigintReplacer, 2));
 
-    const { action, tokenIn, tokenOut, recipient, amountIn, amountOutMinimum, rpcUrl } =
-      abilityParams;
+    const { action, tokenIn, tokenOut, amountIn, amountOutMinimum, rpcUrl } = abilityParams;
 
     const finalRpcUrl = rpcUrl || moltenSwapConfig.rpcUrl;
     const provider = new ethers.providers.StaticJsonRpcProvider(finalRpcUrl);
@@ -268,7 +265,6 @@ export const vincentAbility = createVincentAbility({
         pkpPublicKey: delegatorPkpInfo.publicKey,
         tokenIn,
         tokenOut,
-        recipient,
         amountIn: requiredTokenInAmount.toString(),
         amountOutMinimum: amountOutMinParsed.toString(),
       });

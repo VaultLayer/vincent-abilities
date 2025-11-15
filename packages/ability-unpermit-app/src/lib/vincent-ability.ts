@@ -189,6 +189,11 @@ export const vincentAbility = createVincentAbility({
 
   execute: async ({ abilityParams }, { succeed, fail, delegation }) => {
     try {
+      // Contract constants
+      const VINCENT_TOOL_POLICIES_CONTRACT = '0xa3a602F399E9663279cdF63a290101cB6560A87e';
+      const VINCENT_TOOL_POLICIES_CONTRACT_RPC_URL = 'https://yellowstone-rpc.litprotocol.com';
+      const LIT_CHAIN_ID = 175188;
+
       // Get PKP tokenId from delegation context
       const pkpTokenId = delegation.delegatorPkpInfo.tokenId;
       if (!pkpTokenId) {
@@ -218,21 +223,6 @@ export const vincentAbility = createVincentAbility({
 
       // Get provider
       const provider = new ethers.providers.JsonRpcProvider(VINCENT_TOOL_POLICIES_CONTRACT_RPC_URL);
-
-      const { chainId: networkChainId } = await provider.getNetwork();
-
-      // Verify chain ID matches
-      if (networkChainId !== LIT_CHAIN_ID) {
-        return fail({
-          error: `[@vaultlayer/vincent-ability-unpermit-app/execute] Chain ID mismatch. Expected ${LIT_CHAIN_ID}, got ${networkChainId}`,
-        });
-      }
-
-      console.log(
-        '[@vaultlayer/vincent-ability-unpermit-app/execute] ⛓️ Using Chain: yellowstone (Chain ID:',
-        networkChainId,
-        ')',
-      );
 
       // Get app info from delegatee to obtain appId
       const getAppByDelegateeAbi = [
@@ -326,7 +316,7 @@ export const vincentAbility = createVincentAbility({
         contractAddress: VINCENT_TOOL_POLICIES_CONTRACT,
         functionName,
         args: functionArgs,
-        chainId: networkChainId,
+        chainId: LIT_CHAIN_ID,
         overrides: {
           value: '0',
         },

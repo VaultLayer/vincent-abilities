@@ -5,6 +5,16 @@ import { THORCHAIN_API_ENDPOINTS, QUOTE_TOLERANCE_BPS, LIQUIDITY_TOLERANCE_BPS }
 // Declare fetch if not available (for browser environments)
 declare const fetch: any;
 
+// Declare Lit global for Lit Action environment
+declare const Lit: {
+  Actions: {
+    runOnce: (
+      params: { waitForResponse: boolean; name: string },
+      fn: () => Promise<string>,
+    ) => Promise<string>;
+  };
+};
+
 export interface GetThorQuoteParams {
   fromAsset: string;
   toAsset: string;
@@ -47,14 +57,44 @@ export async function getThorQuote(params: GetThorQuoteParams): Promise<ThorQuot
     url.searchParams.set('liquidity_tolerance_bps', String(liquidityToleranceBps));
     url.searchParams.set('tolerance_bps', String(toleranceBps));
 
-    const response = await fetch(url.toString(), { timeout: 15000 });
-    const data: ThorQuoteResponse = await response.json();
+    // Use runOnce to ensure deterministic execution across Lit nodes
+    const quoteResponseJson = await Lit.Actions.runOnce(
+      { waitForResponse: true, name: 'getThorQuote' },
+      async () => {
+        const response = await fetch(url.toString(), { timeout: 15000 });
 
-    if (!data?.memo) {
-      throw new Error('No memo returned from THOR /quote');
+        if (!response.ok) {
+          const errorText = await response.text().catch(() => 'Unable to read error response');
+          return JSON.stringify({
+            error: true,
+            status: response.status,
+            message: `THORChain quote API error (${response.status}): ${errorText}. Request: ${fromAsset} -> ${toAsset}, amount: ${amount1e8}`,
+          });
+        }
+
+        const data: ThorQuoteResponse = await response.json();
+
+        if (!data?.memo) {
+          // Log the full response for debugging
+          console.error('THORChain quote response missing memo:', JSON.stringify(data, null, 2));
+          return JSON.stringify({
+            error: true,
+            message: `No memo returned from THOR /quote. Response: ${JSON.stringify(data)}. Request: ${fromAsset} -> ${toAsset}, amount: ${amount1e8}`,
+            data,
+          });
+        }
+
+        return JSON.stringify({ error: false, data });
+      },
+    );
+
+    const quoteResponse = JSON.parse(quoteResponseJson);
+
+    if (quoteResponse.error) {
+      throw new Error(quoteResponse.message || 'Unknown error from THORChain quote API');
     }
 
-    return data;
+    return quoteResponse.data as ThorQuoteResponse;
   } catch (error: any) {
     // Handle specific THORChain error messages
     if (error.response?.status === 500 || error.response?.status === 400) {

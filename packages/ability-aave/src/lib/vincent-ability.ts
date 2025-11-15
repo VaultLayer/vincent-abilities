@@ -66,16 +66,8 @@ export const vincentAbility = createVincentAbility({
         abilityParams,
       });
 
-      const {
-        operation,
-        assetSymbol,
-        chain,
-        amount,
-        rateMode,
-        recipient,
-        rpcUrl,
-        alchemyGasSponsor,
-      } = abilityParams;
+      const { operation, assetSymbol, chain, amount, rateMode, rpcUrl, alchemyGasSponsor } =
+        abilityParams;
 
       if (!rpcUrl && !alchemyGasSponsor) {
         return fail({
@@ -302,7 +294,7 @@ export const vincentAbility = createVincentAbility({
               estimatedGas = await poolContract.estimateGas.withdraw(
                 assetAddress,
                 requestedAmount,
-                recipient || pkpAddress,
+                pkpAddress,
                 {
                   from: pkpAddress,
                 },
@@ -379,7 +371,6 @@ export const vincentAbility = createVincentAbility({
         chain,
         amount,
         rateMode,
-        recipient,
         rpcUrl,
         alchemyGasSponsor,
         alchemyGasSponsorApiKey,
@@ -475,7 +466,6 @@ export const vincentAbility = createVincentAbility({
         rateMode:
           rateMode ||
           (operation === AaveOperation.BORROW || operation === AaveOperation.REPAY ? 2 : undefined),
-        recipient,
         alchemyGasSponsor,
         alchemyGasSponsorApiKey,
         alchemyGasSponsorPolicyId,

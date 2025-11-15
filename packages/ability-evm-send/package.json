@@ -1,6 +1,6 @@
 {
   "name": "@vaultlayer/vincent-ability-evm-send",
-  "version": "0.2.6",
+  "version": "0.2.11",
   "description": "A unified Vincent ability for EVM transfers (native ETH and ERC20 tokens)",
   "main": "./dist/src/index.js",
   "module": "./dist/src/index.js",

@@ -12,10 +12,6 @@ export const abilityParamsSchema = z.object({
     .string()
     .regex(/^0x[a-fA-F0-9]{40}$/, 'Must be a valid Ethereum address')
     .describe('Output token address'),
-  recipient: z
-    .string()
-    .regex(/^0x[a-fA-F0-9]{40}$/, 'Must be a valid Ethereum address')
-    .describe('Recipient address for the swap'),
   amountIn: z.string().describe('Input amount as decimal string'),
   amountOutMinimum: z
     .string()

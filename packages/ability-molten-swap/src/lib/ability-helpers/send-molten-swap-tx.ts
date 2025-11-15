@@ -12,7 +12,6 @@ export const sendMoltenSwapTx = async ({
   pkpPublicKey,
   tokenIn,
   tokenOut,
-  recipient,
   amountIn,
   amountOutMinimum,
   chainId,
@@ -22,7 +21,6 @@ export const sendMoltenSwapTx = async ({
   pkpPublicKey: string;
   tokenIn: string;
   tokenOut: string;
-  recipient: string;
   amountIn: string;
   amountOutMinimum: string;
   chainId: number;
@@ -41,7 +39,8 @@ export const sendMoltenSwapTx = async ({
 
   const abi = [exactInputAbi];
   const functionName = 'exactInput';
-  const args = [[encodedPath, recipient, deadline, amountIn, amountOutMinimum]];
+  // Always use the delegator's address as recipient for security
+  const args = [[encodedPath, pkpEthAddress, deadline, amountIn, amountOutMinimum]];
 
   // Determine value: if tokenIn is wCORE, send native CORE as value
   const tokenInInfo = getTokenInfo(tokenIn);

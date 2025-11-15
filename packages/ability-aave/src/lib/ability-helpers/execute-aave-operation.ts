@@ -129,7 +129,6 @@ export async function executeAaveOperation({
   pkpInfo,
   provider,
   rateMode,
-  recipient,
   alchemyGasSponsor,
   alchemyGasSponsorApiKey,
   alchemyGasSponsorPolicyId,
@@ -142,7 +141,6 @@ export async function executeAaveOperation({
   pkpInfo: PKPInfo;
   provider: ethers.providers.JsonRpcProvider;
   rateMode?: number;
-  recipient?: string;
   alchemyGasSponsor?: boolean;
   alchemyGasSponsorApiKey?: string;
   alchemyGasSponsorPolicyId?: string;
@@ -164,7 +162,7 @@ export async function executeAaveOperation({
       break;
     case AaveOperation.WITHDRAW:
       functionName = 'withdraw';
-      args = [assetAddress, amount, recipient || pkpInfo.ethAddress];
+      args = [assetAddress, amount, pkpInfo.ethAddress];
       break;
     case AaveOperation.REPAY:
       if (!rateMode) {
